@@ -1,4 +1,4 @@
-#' BubblePlot
+#' bubbleplot
 #'
 #' Display percentage of cells expressing and levels for a set of genes.
 #'
@@ -26,7 +26,7 @@
 #' @export
 #'
 #' @examples BubblePlot(seuratObj = obj, genes.plot = c("IFIT1","IFITM1","IFITM3"), group.by = "treatment")
-BubblePlot <- function(seuratObj,
+bubbleplot <- function(seuratObj,
                        genes.plot,
                        group.by = 'ident',
                        x.lab.size = 9,
@@ -108,4 +108,75 @@ BubblePlot <- function(seuratObj,
 #' @examples PercentAbove(x = c(1,2,3), threshold = 2)
 PercentAbove <- function(x, threshold){
   return(length(x = x[x > threshold]) / length(x = x))
+}
+
+#' retrieveGO
+#'
+#' Retrieve the HUGO Gene Nomenclature Committee names associated with a GeneOntology term.
+#'
+#' @param term GO ID to retreive names for.
+#' @param mart Biomart database to use (default: 'ensembl')
+#' @param dataset Biomart dataset to use (default: 'hsapiens_gene_ensembl')
+#'
+#' @importFrom biomaRt useMart
+#' @importFrom biomaRt getBM
+#' @return A list of HCGN names.
+#' @export
+#'
+#' @examples genes_to_plot <- retrieveGO('GO:0046774')
+#'
+retrieveGO <- function(term, mart = 'ensembl', dataset='hsapiens_gene_ensembl'){
+  gene.data <- getBM(attributes=c('hgnc_symbol', 'ensembl_transcript_id', 'go_id'),
+                     filters = 'go',
+                     values = term,
+                     mart = useMart(mart,dataset=dataset)
+  )
+  return(gene.data)
+}
+
+#' GObubbleplot
+#'
+#' Produces a Bubble Plot for the genes of a given GO term.
+#'
+#' @param seuratObj Seurat object
+#' @param go_term Gene Ontology term identifier (i.e. GO:0046774)
+#' @param group.by Factor by which to group cells.  (default: ident)
+#' @param filter A list of gene names to filter the GO term members against. (default: all genes in seuratObj)
+#' @param do.return If TRUE, return a ggplot2 object instead of displaying chart
+#'
+#' @import dplyr
+#' @importFrom magrittr "%>%"
+#'
+#' @return if isTRUE(do.return), a ggplot2 object
+#' @export
+#'
+#' @examples
+GObubbleplot <- function(seuratObj,
+                         go_term,
+                         group.by = "ident",
+                         filter = NULL,
+                         do.return = FALSE){
+  if(is.null(filter)){
+    filter <- rownames(seuratObj@data)
+  }
+
+  gg <- go_genes_to_plot <- retrieveGO(go_term) %>%
+    dplyr::select(hgnc_symbol) %>%
+    distinct() %>%
+    filter(hgnc_symbol %in% filter)
+
+  if(length(go_genes_to_plot$hgnc_symbol) > 0){
+    bubbleplot(seuratObj,
+               genes.plot = unique(go_genes_to_plot$hgnc_symbol),
+               group.by = group.by)
+  } else {
+    print("No genes for that term are expressed in the dataset.")
+  }
+
+  if(isTRUE(do.return)){
+    return(gg)
+  } else {
+    gg
+  }
+
 }
