@@ -66,13 +66,13 @@ BubblePlot <- function(seuratObj,
   if(isTRUE(clust.x)){
     gene_dendro <- avg_expr %>% dist() %>% hclust %>% as.dendrogram()
     gene_order <- gene_dendro %>% order.dendrogram()
-    data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro)[gene_order], ordered = TRUE)
+    data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro), ordered = TRUE)
   }
 
   if(isTRUE(clust.y)){
     id_dendro <- avg_expr %>% t() %>% dist() %>% hclust %>% as.dendrogram()
     id_order <- id_dendro %>% order.dendrogram()
-    data.to.plot$ident <- factor(data.to.plot$ident, levels = labels(id_dendro)[id_order], ordered = TRUE)
+    data.to.plot$ident <- factor(data.to.plot$ident, levels = labels(id_dendro), ordered = TRUE)
   }
 
   data.to.plot <- data.to.plot %>% ungroup() %>% group_by(genes.plot) %>%
