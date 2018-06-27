@@ -160,17 +160,18 @@ GObubbleplot <- function(seuratObj,
     filter <- rownames(seuratObj@data)
   }
 
-  gg <- go_genes_to_plot <- retrieveGO(go_term) %>%
+  go_genes_to_plot <- retrieveGO(go_term) %>%
     dplyr::select(hgnc_symbol) %>%
     distinct() %>%
     filter(hgnc_symbol %in% filter)
 
   if(length(go_genes_to_plot$hgnc_symbol) > 0){
-    bubbleplot(seuratObj,
+    gg <- bubbleplot(seuratObj,
                genes.plot = unique(go_genes_to_plot$hgnc_symbol),
                group.by = group.by)
   } else {
     print("No genes for that term are expressed in the dataset.")
+    exit()
   }
 
   if(isTRUE(do.return)){
