@@ -1,12 +1,19 @@
 Package: bubbleplot
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Create bubble plot of scRNAseq expression data from Seurat
 Version: 0.1.0
-Author: Who wrote it
+Authors@R: person("Miles", "Smith", email = "miles-smith@omrf.org", role = c("aut", "cre"))
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: Creates a bubble plot displaying scRNAseq expression data where the size of bubbles indicates the percentage of a cell popluation expressing a gene and the color intensity indicates normalized expression levels.
+Depends: R (>= 3.5.0),
+  dplyr,
+  magrittr,
+  Seurat,
+  tidyr,
+  tibble,
+  compositions,
+  ggplot2
+License: BSD
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
