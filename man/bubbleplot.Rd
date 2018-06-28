@@ -6,7 +6,7 @@
 \usage{
 bubbleplot(seuratObj, genes.plot, group.by = "ident", x.lab.size = 9,
   y.lab.size = 9, x.lab.rot.angle = 45, clust.x = TRUE, clust.y = TRUE,
-  do.return = FALSE)
+  colors.use = NULL, do.return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
@@ -25,9 +25,9 @@ bubbleplot(seuratObj, genes.plot, group.by = "ident", x.lab.size = 9,
 
 \item{clust.y}{Arrange the y-axis variables using hierarchical clustering. (default: TRUE)}
 
-\item{do.return}{Return a ggplot2 object instead of displaying}
-
 \item{colors.use}{Color palette to use to display expression levels. (note: not currently implemented)}
+
+\item{do.return}{Return a ggplot2 object instead of displaying}
 }
 \value{
 if isTRUE(do.return), a ggplot2 object

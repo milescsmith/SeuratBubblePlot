@@ -34,7 +34,7 @@ bubbleplot <- function(seuratObj,
                        x.lab.rot.angle = 45,
                        clust.x = TRUE,
                        clust.y = TRUE,
-                       #colors.use,
+                       colors.use = NULL,
                        do.return = FALSE){
 
   genes.plot <- (genes.plot %>% as_tibble() %>% dplyr::filter(value %in% rownames(seuratObj@data)))$value
@@ -87,7 +87,13 @@ bubbleplot <- function(seuratObj,
     geom_point() +
     theme(axis.text.x = element_text(angle=x.lab.rot.angle, hjust = 1, size = x.lab.size),
           axis.text.y = element_text(size = y.lab.size)) +
-    scale_radius(range = c(0,5)) + scale_color_continuous(low = "#EEEEEE",high = "#FF0000")
+    scale_radius(range = c(0,5))
+
+  if(!is.null(colors.use)){
+    g <- g + scale_color_gradientn(colors = make_color_scale(palette = colors.use, gradations = 100))
+  } else {
+    g <- g + scale_color_continuous(low = "#EEEEEE",high = "#FF0000")
+  }
 
   if(isTRUE(do.return)){
     return(g)
