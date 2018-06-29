@@ -5,7 +5,7 @@
 \title{GObubbleplot}
 \usage{
 GObubbleplot(seuratObj, go_term, group.by = "ident", filter = NULL,
-  do.return = FALSE)
+  do.return = FALSE, ...)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
