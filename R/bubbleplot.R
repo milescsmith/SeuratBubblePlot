@@ -146,6 +146,7 @@ GObubbleplot <- function(seuratObj,
                          clust.y = TRUE,
                          colors.use = NULL, 
                          do.return = FALSE){
+  requireNamespace('org.Hs.eg.db')
   if(is.null(filter)){
     filter <- rownames(seuratObj@data)
   }
