@@ -163,7 +163,7 @@ GObubbleplot <- function(seuratObj,
                      clust.x = clust.x, 
                      clust.y = clust.y, 
                      colors.use = colors.use, 
-                     do.return = do.return))
+                     do.return = do.return)
   } else {
     print("No genes for that term are expressed in the dataset.")
     exit()
