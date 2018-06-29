@@ -162,7 +162,8 @@ GObubbleplot <- function(seuratObj,
                          go_term,
                          group.by = "ident",
                          filter = NULL,
-                         do.return = FALSE){
+                         do.return = FALSE,
+                         ...){
   if(is.null(filter)){
     filter <- rownames(seuratObj@data)
   }
@@ -173,7 +174,8 @@ GObubbleplot <- function(seuratObj,
   if(length(go_genes_to_plot) > 0){
     gg <- bubbleplot(seuratObj,
                genes.plot = unique(go_genes_to_plot),
-               group.by = group.by)
+               group.by = group.by,
+               list(...))
   } else {
     print("No genes for that term are expressed in the dataset.")
     exit()
