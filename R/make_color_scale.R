@@ -8,9 +8,9 @@
 #' @return A list of hexidecimal numbers.
 #' @export
 #'
-#' importFrom RColorBrewer brewer.pal.info brewer.pal
-#' importFrom viridis viridis
-#' importFrom grDevices colorRampPalette
+#' @importFrom RColorBrewer brewer.pal.info brewer.pal
+#' @importFrom viridis viridis
+#' @importFrom grDevices colorRampPalette
 #'
 #' @examples make_color_scale(palette = 'Reds', n = 100)
 make_color_scale <- function(palette = "viridis", gradations = 10){

@@ -24,3 +24,6 @@ if isTRUE(do.return), a ggplot2 object
 \description{
 Produces a Bubble Plot for the genes of a given GO term.
 }
+\examples{
+GObubbleplot(seuratObj = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
+}

@@ -129,12 +129,12 @@ PercentAbove <- function(x, threshold){
 #'
 #' @import dplyr
 #' @importFrom magrittr "%>%"
-#' @importFrom org.Hs.eg.db org.Hs.egGO2ALLEGS org.Hs.egSYMBOL
+#' @importFrom org.Hs.eg.db org.Hs.egGO org.Hs.egSYMBOL
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
 #'
-#' @examples
+#' @examples GObubbleplot(seuratObj = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
 GObubbleplot <- function(seuratObj,
                          go_term,
                          group.by = "ident",
