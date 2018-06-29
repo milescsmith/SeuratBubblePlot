@@ -146,12 +146,12 @@ GObubbleplot <- function(seuratObj,
                          clust.y = TRUE,
                          colors.use = NULL, 
                          do.return = FALSE){
-  requireNamespace('org.Hs.eg.db')
+  
   if(is.null(filter)){
     filter <- rownames(seuratObj@data)
   }
 
-  go_genes_to_plot <- unlist(mget(get(go_term,org.Hs.egGO2ALLEGS), org.Hs.egSYMBOL))
+  go_genes_to_plot <- unlist(BiocGenerics::mget(BiocGenerics::get(go_term,org.Hs.egGO2ALLEGS), org.Hs.egSYMBOL))
   go_genes_to_plot <- go_genes_to_plot[which(go_genes_to_plot %in% filter)]
 
   if(length(go_genes_to_plot) > 0){
