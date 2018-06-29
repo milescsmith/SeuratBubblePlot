@@ -76,7 +76,7 @@ bubbleplot <- function(seuratObj,
   }
 
   data.to.plot <- data.to.plot %>% ungroup() %>% group_by(genes.plot) %>%
-    mutate(avg.exp.scale = normalize(x = avg.exp))
+    mutate(avg.exp.scale = compositions::normalize(x = avg.exp))
 
   g <- data.to.plot %>%
     ggplot(aes(x = genes.plot,
