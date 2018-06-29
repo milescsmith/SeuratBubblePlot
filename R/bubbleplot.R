@@ -152,6 +152,7 @@ retrieveGO <- function(term, mart = 'ensembl', dataset='hsapiens_gene_ensembl'){
 #'
 #' @import dplyr
 #' @importFrom magrittr "%>%"
+#' @importFrom org.Hs.eg.db org.Hs.egGO2ALLEGS org.Hs.egSYMBOL
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
@@ -166,14 +167,12 @@ GObubbleplot <- function(seuratObj,
     filter <- rownames(seuratObj@data)
   }
 
-  go_genes_to_plot <- retrieveGO(go_term) %>%
-    dplyr::select(hgnc_symbol) %>%
-    distinct() %>%
-    filter(hgnc_symbol %in% filter)
+  go_genes_to_plot <- unlist(mget(get(go_term,org.Hs.egGO2ALLEGS), org.Hs.egSYMBOL))
+  go_genes_to_plot <- go_genes_to_plot[which(go_genes_to_plot %in% filter)]
 
-  if(length(go_genes_to_plot$hgnc_symbol) > 0){
+  if(length(go_genes_to_plot) > 0){
     gg <- bubbleplot(seuratObj,
-               genes.plot = unique(go_genes_to_plot$hgnc_symbol),
+               genes.plot = unique(go_genes_to_plot),
                group.by = group.by)
   } else {
     print("No genes for that term are expressed in the dataset.")
