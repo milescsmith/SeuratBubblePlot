@@ -151,7 +151,7 @@ GObubbleplot <- function(seuratObj,
     filter <- rownames(seuratObj@data)
   }
 
-  go_genes_to_plot <- unlist(mget(mget(go_term,org.Hs.egGO2ALLEGS), org.Hs.egSYMBOL))
+  go_genes_to_plot <- unlist(mget(get(go_term,org.Hs.egGO2ALLEGS), org.Hs.egSYMBOL))
   go_genes_to_plot <- go_genes_to_plot[which(go_genes_to_plot %in% filter)]
 
   if(length(go_genes_to_plot) > 0){
