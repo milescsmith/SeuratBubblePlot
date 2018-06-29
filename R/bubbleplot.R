@@ -128,8 +128,8 @@ PercentAbove <- function(x, threshold){
 #' @param do.return If TRUE, return a ggplot2 object instead of displaying chart
 #'
 #' @import dplyr
+#' @import org.Hs.eg.db
 #' @importFrom magrittr "%>%"
-#' @importFrom org.Hs.eg.db org.Hs.egGO org.Hs.egSYMBOL
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
