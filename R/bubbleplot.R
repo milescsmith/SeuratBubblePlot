@@ -72,7 +72,7 @@ bubbleplot <- function(seuratObj,
   if (!is.null(filter.exp.pct)){
     avg.detect <- AverageDetectionRate(object = seuratObj, thresh.min = filter.exp.pct.thresh)
     avg.detect$highest <- avg.detect %>% apply(., MARGIN = 1, FUN = max)
-    avg.detect %<>% filter(highest > filter.exp.pct) %>% select(gene_name)
+    avg.detect %<>% rownames_to_column('gene_name') %>% filter(highest > filter.exp.pct) %>% select(gene_name)
     data.to.plot %<>% filter(genes.plot %in% avg.detect$gene_name)
   }
 
