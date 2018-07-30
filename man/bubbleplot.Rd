@@ -4,14 +4,21 @@
 \alias{bubbleplot}
 \title{bubbleplot}
 \usage{
-bubbleplot(seuratObj, genes.plot, group.by = "ident", x.lab.size = 9,
-  y.lab.size = 9, x.lab.rot.angle = 45, clust.x = TRUE, clust.y = TRUE,
-  colors.use = NULL, do.return = FALSE)
+bubbleplot(seuratObj, genes.plot, filter.exp.pct = NULL,
+  filter.exp.pct.thresh = 0, filter.exp.level = 0, group.by = "ident",
+  x.lab.size = 9, y.lab.size = 9, x.lab.rot.angle = 45, clust.x = TRUE,
+  clust.y = TRUE, colors.use = NULL, do.return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
 
 \item{genes.plot}{A list of genes to display.}
+
+\item{filter.exp.pct}{Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)}
+
+\item{filter.exp.pct.thresh}{Threshold for expression fraction. (default: 0)}
+
+\item{filter.exp.level}{Display only genes that are expressed above this level in at least one group. (default: 0)}
 
 \item{group.by}{Variable by which to group cells.  Can be cluster identities or any column from the meta.data slot. (default: ident)}
 
@@ -25,7 +32,7 @@ bubbleplot(seuratObj, genes.plot, group.by = "ident", x.lab.size = 9,
 
 \item{clust.y}{Arrange the y-axis variables using hierarchical clustering. (default: TRUE)}
 
-\item{colors.use}{Color palette to use to display expression levels. (note: not currently implemented)}
+\item{colors.use}{Color palette to use to display expression levels. (default: "Reds")}
 
 \item{do.return}{Return a ggplot2 object instead of displaying}
 }

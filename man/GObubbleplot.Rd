@@ -5,7 +5,9 @@
 \title{GObubbleplot}
 \usage{
 GObubbleplot(seuratObj, go_term, group.by = "ident", filter = NULL,
-  do.return = FALSE, ...)
+  filter.exp.pct = NULL, filter.exp.pct.thresh = 0, filter.exp.level = 0,
+  x.lab.size = 9, y.lab.size = 9, x.lab.rot.angle = 45, clust.x = TRUE,
+  clust.y = TRUE, colors.use = NULL, do.return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
@@ -15,6 +17,12 @@ GObubbleplot(seuratObj, go_term, group.by = "ident", filter = NULL,
 \item{group.by}{Factor by which to group cells.  (default: ident)}
 
 \item{filter}{A list of gene names to filter the GO term members against. (default: all genes in seuratObj)}
+
+\item{filter.exp.pct}{Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)}
+
+\item{filter.exp.pct.thresh}{Threshold for expression fraction. (default: 0)}
+
+\item{filter.exp.level}{Display only genes that are expressed above this level in at least one group. (default: 0)}
 
 \item{do.return}{If TRUE, return a ggplot2 object instead of displaying chart}
 }
