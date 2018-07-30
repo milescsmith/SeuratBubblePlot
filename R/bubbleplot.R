@@ -4,13 +4,16 @@
 #'
 #' @param seuratObj Seurat object
 #' @param genes.plot A list of genes to display.
+#' @param filter.exp.pct Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)
+#' @param filter.exp.pct.thresh Threshold for expression fraction. (default: 0)
+#' @param filter.exp.level Display only genes that are expressed above this level in at least one group. (default: 0)
 #' @param group.by Variable by which to group cells.  Can be cluster identities or any column from the meta.data slot. (default: ident)
 #' @param x.lab.size Font size for the x-axis labels. (default: 9)
 #' @param y.lab.size Font size for the y-axis labels. (default: 9)
 #' @param x.lab.rot.angle Angle to rotate the x-axis labels. (default: 45°)
 #' @param clust.x Arrange the x-axis variables using hierarchical clustering. (default: TRUE)
 #' @param clust.y Arrange the y-axis variables using hierarchical clustering. (default: TRUE)
-#' @param colors.use Color palette to use to display expression levels. (note: not currently implemented)
+#' @param colors.use Color palette to use to display expression levels. (default: "Reds")
 #' @param do.return Return a ggplot2 object instead of displaying
 #'
 #' @import ggplot2
@@ -28,6 +31,9 @@
 #' @examples BubblePlot(seuratObj = obj, genes.plot = c("IFIT1","IFITM1","IFITM3"), group.by = "treatment")
 bubbleplot <- function(seuratObj,
                        genes.plot,
+                       filter.exp.pct = NULL,
+                       filter.exp.pct.thresh = 0,
+                       filter.exp.level = 0,
                        group.by = 'ident',
                        x.lab.size = 9,
                        y.lab.size = 9,
@@ -60,23 +66,32 @@ bubbleplot <- function(seuratObj,
               n = n())
 
   data.to.plot$genes.plot <- sub(x = data.to.plot$genes.plot, pattern = "\\.", replacement = "-")
-  avg_expr <- AverageExpression(object = SetAllIdent(seuratObj, group.by), genes.use = genes.plot, show.progress = FALSE) %>%
+  avg.expr <- AverageExpression(object = SetAllIdent(seuratObj, group.by), genes.use = genes.plot, show.progress = FALSE) %>%
     scale()
 
+  if (!is.null(filter.exp.pct)){
+    avg.detect <- AverageDetectionRate(object = seuratObj, thresh.min = filter.exp.pct.thresh)
+    avg.detect$highest <- avg.detect %>% apply(., MARGIN = 1, FUN = max)
+    avg.detect %<>% filter(highest > filter.exp.pct) %>% select(gene_name)
+    data.to.plot %<>% filter(genes.plot %in% avg.detect$gene_name)
+  }
+
   if(isTRUE(clust.x)){
-    gene_dendro <- avg_expr %>% dist() %>% hclust %>% as.dendrogram()
+    gene_dendro <- avg.expr %>% dist() %>% hclust %>% as.dendrogram()
     gene_order <- gene_dendro %>% order.dendrogram()
     data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro), ordered = TRUE)
   }
 
   if(isTRUE(clust.y)){
-    id_dendro <- avg_expr %>% t() %>% dist() %>% hclust %>% as.dendrogram()
+    id_dendro <- avg.expr %>% t() %>% dist() %>% hclust %>% as.dendrogram()
     id_order <- id_dendro %>% order.dendrogram()
     data.to.plot$ident <- factor(data.to.plot$ident, levels = labels(id_dendro), ordered = TRUE)
   }
 
   data.to.plot <- data.to.plot %>% ungroup() %>% group_by(genes.plot) %>%
     mutate(avg.exp.scale = compositions::normalize(x = avg.exp))
+
+  data.to.plot %<>% group_by(genes.plot) %>% filter(max(avg.exp.scale) > filter.exp.level)
 
   g <- data.to.plot %>%
     ggplot(aes(x = genes.plot,
@@ -125,6 +140,10 @@ PercentAbove <- function(x, threshold){
 #' @param go_term Gene Ontology term identifier (i.e. GO:0046774)
 #' @param group.by Factor by which to group cells.  (default: ident)
 #' @param filter A list of gene names to filter the GO term members against. (default: all genes in seuratObj)
+#' @param filter.exp.pct Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)
+#' @param filter.exp.pct.thresh Threshold for expression fraction. (default: 0)
+#' @param filter.exp.level Display only genes that are expressed above this level in at least one group. (default: 0)
+#'
 #' @param do.return If TRUE, return a ggplot2 object instead of displaying chart
 #'
 #' @import dplyr
@@ -139,14 +158,17 @@ GObubbleplot <- function(seuratObj,
                          go_term,
                          group.by = "ident",
                          filter = NULL,
+                         filter.exp.pct = NULL,
+                         filter.exp.pct.thresh = 0,
+                         filter.exp.level = 0,
                          x.lab.size = 9,
-                         y.lab.size = 9, 
+                         y.lab.size = 9,
                          x.lab.rot.angle = 45,
-                         clust.x = TRUE, 
+                         clust.x = TRUE,
                          clust.y = TRUE,
-                         colors.use = NULL, 
+                         colors.use = NULL,
                          do.return = FALSE){
-  
+
   if(is.null(filter)){
     filter <- rownames(seuratObj@data)
   }
@@ -158,12 +180,15 @@ GObubbleplot <- function(seuratObj,
     gg <- bubbleplot(seuratObj,
                      genes.plot = unique(go_genes_to_plot),
                      group.by = group.by,
+                     filter.exp.pct = filter.exp.pct,
+                     filter.exp.pct.thresh = filter.exp.pct.thresh,
+                     filter.exp.level = filter.exp.level,
                      x.lab.size = x.lab.size,
-                     y.lab.size = y.lab.size, 
-                     x.lab.rot.angle = x.lab.rot.angle, 
-                     clust.x = clust.x, 
-                     clust.y = clust.y, 
-                     colors.use = colors.use, 
+                     y.lab.size = y.lab.size,
+                     x.lab.rot.angle = x.lab.rot.angle,
+                     clust.x = clust.x,
+                     clust.y = clust.y,
+                     colors.use = colors.use,
                      do.return = do.return)
   } else {
     print("No genes for that term are expressed in the dataset.")
