@@ -109,7 +109,7 @@ bubbleplot <- function(seuratObj,
     geom_point() +
     theme(axis.text.x = element_text(angle=x.lab.rot.angle, hjust = 1, size = x.lab.size),
           axis.text.y = element_text(size = y.lab.size)) + 
-    labs(x = x.axis.title, y = y.axis.title, size = "Percent of group expressing", color = "Average scaled expression) +
+    labs(x = x.axis.title, y = y.axis.title, size = "Percent of group expressing", color = "Average scaled expression") +
     scale_radius(range = c(0,5))
 
   if(!is.null(colors.use)){
