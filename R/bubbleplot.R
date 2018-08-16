@@ -24,7 +24,7 @@
 #' @importFrom tidyr gather
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
 #' @importFrom compositions normalize
-#' @importFrom gtools mixedsort
+#' @importFrom gtools mixedorder
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
