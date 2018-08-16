@@ -84,7 +84,7 @@ bubbleplot <- function(seuratObj,
     gene_order <- gene_dendro %>% order.dendrogram()
     data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro), ordered = TRUE)
   } else {
-    data.to.plot %<>% arrange(gtools::mixedsort(genes.plot))
+    data.to.plot[mixedorder(data.to.plot$genes.plot),]
   }
 
   if(isTRUE(clust.y)){
@@ -99,10 +99,10 @@ bubbleplot <- function(seuratObj,
   data.to.plot %<>% group_by(genes.plot) %>% filter(max(avg.exp.scale) > filter.exp.level)
   
   if(!isTRUE(clust.y)){
-     data.to.plot %<>% arrange(gtools::mixedsort(ident))
+     data.to.plot <- data.to.plot[mixedorder(data.to.plot$ident),]
   }
   if(!isTRUE(clust.x)){
-     data.to.plot %<>% arrange(gtools::mixedsort(genes.plot))
+     data.to.plot <- data.to.plot[mixedorder(data.to.plot$genes.plot),]
   }
     
   g <- data.to.plot %>%
