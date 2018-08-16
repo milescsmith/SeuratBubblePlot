@@ -16,7 +16,8 @@ Depends: R (>= 3.5.0),
   grDevices,
   viridis,
   RColorBrewer,
-  org.Hs.eg.db
+  org.Hs.eg.db,
+  gtools
 License: BSD
 Encoding: UTF-8
 LazyData: true
