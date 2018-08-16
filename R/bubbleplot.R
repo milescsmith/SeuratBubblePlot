@@ -24,6 +24,7 @@
 #' @importFrom tidyr gather
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
 #' @importFrom compositions normalize
+#' @importFrom gtools mixedsort
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
@@ -37,8 +38,10 @@ bubbleplot <- function(seuratObj,
                        group.by = 'ident',
                        x.lab.size = 9,
                        y.lab.size = 9,
+                       x.axis.title = "Genes",
+                       y.axis.title = "Grouping",
                        x.lab.rot.angle = 45,
-                       clust.x = TRUE,
+                       clust.x = FALSE,
                        clust.y = TRUE,
                        colors.use = NULL,
                        do.return = FALSE){
@@ -80,12 +83,16 @@ bubbleplot <- function(seuratObj,
     gene_dendro <- avg.expr %>% dist() %>% hclust %>% as.dendrogram()
     gene_order <- gene_dendro %>% order.dendrogram()
     data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro), ordered = TRUE)
+  } else {
+    data.to.plot %<>% arrange(gtools::mixedsort(genes.plot))
   }
 
   if(isTRUE(clust.y)){
     id_dendro <- avg.expr %>% t() %>% dist() %>% hclust %>% as.dendrogram()
     id_order <- id_dendro %>% order.dendrogram()
     data.to.plot$ident <- factor(data.to.plot$ident, levels = labels(id_dendro), ordered = TRUE)
+  } else {
+    data.to.plot %<>% arrange(gtools::mixedsort(ident))
   }
 
   data.to.plot <- data.to.plot %>% ungroup() %>% group_by(genes.plot) %>%
@@ -101,7 +108,8 @@ bubbleplot <- function(seuratObj,
            ) +
     geom_point() +
     theme(axis.text.x = element_text(angle=x.lab.rot.angle, hjust = 1, size = x.lab.size),
-          axis.text.y = element_text(size = y.lab.size)) +
+          axis.text.y = element_text(size = y.lab.size)) + 
+    labs(x = x.axis.title, y = y.axis.title, size = "Percent of group expressing", color = "Average scaled expression) +
     scale_radius(range = c(0,5))
 
   if(!is.null(colors.use)){
