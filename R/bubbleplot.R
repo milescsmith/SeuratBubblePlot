@@ -91,15 +91,20 @@ bubbleplot <- function(seuratObj,
     id_dendro <- avg.expr %>% t() %>% dist() %>% hclust %>% as.dendrogram()
     id_order <- id_dendro %>% order.dendrogram()
     data.to.plot$ident <- factor(data.to.plot$ident, levels = labels(id_dendro), ordered = TRUE)
-  } else {
-    data.to.plot %<>% arrange(gtools::mixedsort(ident))
   }
 
   data.to.plot <- data.to.plot %>% ungroup() %>% group_by(genes.plot) %>%
     mutate(avg.exp.scale = compositions::normalize(x = avg.exp))
 
   data.to.plot %<>% group_by(genes.plot) %>% filter(max(avg.exp.scale) > filter.exp.level)
-
+  
+  if(!isTRUE(clust.y)){
+     data.to.plot %<>% arrange(gtools::mixedsort(ident))
+  }
+  if(!isTRUE(clust.x)){
+     data.to.plot %<>% arrange(gtools::mixedsort(genes.plot))
+  }
+    
   g <- data.to.plot %>%
     ggplot(aes(x = genes.plot,
                y = ident,
@@ -109,7 +114,7 @@ bubbleplot <- function(seuratObj,
     geom_point() +
     theme(axis.text.x = element_text(angle=x.lab.rot.angle, hjust = 1, size = x.lab.size),
           axis.text.y = element_text(size = y.lab.size)) + 
-    labs(x = x.axis.title, y = y.axis.title, size = "Percent of group expressing", color = "Average scaled expression") +
+    labs(x = x.axis.title, y = y.axis.title, size = "Percent\ngroup\nexpressing", color = "Average\nscaled\nexpression") +
     scale_radius(range = c(0,5))
 
   if(!is.null(colors.use)){
