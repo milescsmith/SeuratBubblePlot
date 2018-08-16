@@ -83,8 +83,6 @@ bubbleplot <- function(seuratObj,
     gene_dendro <- avg.expr %>% dist() %>% hclust %>% as.dendrogram()
     gene_order <- gene_dendro %>% order.dendrogram()
     data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro), ordered = TRUE)
-  } else {
-    data.to.plot[mixedorder(data.to.plot$genes.plot),]
   }
 
   if(isTRUE(clust.y)){
