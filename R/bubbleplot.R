@@ -40,6 +40,8 @@ bubbleplot <- function(seuratObj,
                        y.lab.size = 9,
                        x.axis.title = "Genes",
                        y.axis.title = "Grouping",
+                       pct.legend.title = "Percent group expressing",
+                       scale.legend.title = "Average scaled expression",
                        x.lab.rot.angle = 45,
                        clust.x = FALSE,
                        clust.y = TRUE,
@@ -112,7 +114,7 @@ bubbleplot <- function(seuratObj,
     geom_point() +
     theme(axis.text.x = element_text(angle=x.lab.rot.angle, hjust = 1, size = x.lab.size),
           axis.text.y = element_text(size = y.lab.size)) + 
-    labs(x = x.axis.title, y = y.axis.title, size = "Percent\ngroup\nexpressing", color = "Average\nscaled\nexpression") +
+    labs(x = x.axis.title, y = y.axis.title, size = pct.legend.title, color = scale.legend.title) +
     scale_radius(range = c(0,5))
 
   if(!is.null(colors.use)){
