@@ -181,7 +181,7 @@ GObubbleplot <- function(seuratObj,
                          clust.x = TRUE,
                          clust.y = TRUE,
                          colors.use = NULL,
-                         do.return = FALSE
+                         do.return = FALSE,
                          ...){
 
   if(is.null(filter)){
