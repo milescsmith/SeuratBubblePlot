@@ -156,6 +156,7 @@ PercentAbove <- function(x, threshold){
 #' @param filter.exp.pct Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)
 #' @param filter.exp.pct.thresh Threshold for expression fraction. (default: 0)
 #' @param filter.exp.level Display only genes that are expressed above this level in at least one group. (default: 0)
+#' @param ... Additional options to pass to bubbleplot
 #'
 #' @param do.return If TRUE, return a ggplot2 object instead of displaying chart
 #'
@@ -180,7 +181,8 @@ GObubbleplot <- function(seuratObj,
                          clust.x = TRUE,
                          clust.y = TRUE,
                          colors.use = NULL,
-                         do.return = FALSE){
+                         do.return = FALSE
+                         ...){
 
   if(is.null(filter)){
     filter <- rownames(seuratObj@data)
@@ -202,7 +204,8 @@ GObubbleplot <- function(seuratObj,
                      clust.x = clust.x,
                      clust.y = clust.y,
                      colors.use = colors.use,
-                     do.return = do.return)
+                     do.return = do.return,
+                     ...)
   } else {
     print("No genes for that term are expressed in the dataset.")
     exit()
