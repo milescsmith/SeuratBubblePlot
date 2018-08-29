@@ -3,7 +3,7 @@
 #' Display percentage of cells expressing and levels for a set of genes.
 #'
 #' @param seuratObj Seurat object
-#' @param genes.plot A list of genes to display.
+#' @param genes.plot A list of genes to display. Note: Gene and protein names are converted to the proper gene name automagically by HGNChelper::checkGeneSymbols and those not appearing in the dataset are rejected.
 #' @param filter.exp.pct Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)
 #' @param filter.exp.pct.thresh Threshold for expression fraction. (default: 0)
 #' @param filter.exp.level Display only genes that are expressed above this level in at least one group. (default: 0)
@@ -11,8 +11,8 @@
 #' @param x.lab.size Font size for the x-axis labels. (default: 9)
 #' @param y.lab.size Font size for the y-axis labels. (default: 9)
 #' @param x.lab.rot.angle Angle to rotate the x-axis labels. (default: 45°)
-#' @param clust.x Arrange the x-axis variables using hierarchical clustering. (default: TRUE)
-#' @param clust.y Arrange the y-axis variables using hierarchical clustering. (default: TRUE)
+#' @param cluster.x Arrange the x-axis variables using hierarchical clustering. (default: TRUE)
+#' @param cluster.y Arrange the y-axis variables using hierarchical clustering. (default: FALSE)
 #' @param colors.use Color palette to use to display expression levels. (default: "Reds")
 #' @param do.return Return a ggplot2 object instead of displaying
 #'
@@ -25,6 +25,7 @@
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
 #' @importFrom compositions normalize
 #' @importFrom gtools mixedorder
+#' @importFrom HGNChelper checkGeneSymbols
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
@@ -43,13 +44,15 @@ bubbleplot <- function(seuratObj,
                        pct.legend.title = "Percent group expressing",
                        scale.legend.title = "Average scaled expression",
                        x.lab.rot.angle = 45,
-                       clust.x = FALSE,
-                       clust.y = TRUE,
+                       cluster.x = TRUE,
+                       cluster.y = FALSE,
                        colors.use = NULL,
                        do.return = FALSE){
 
+  genes.plot <- (HGNChelper::checkGeneSymbols(x = genes.plot))$Suggested.Symbol
+  genes.not.found <- (genes.plot %>% as_tibble() %>% dplyr::filter(!value %in% rownames(seuratObj@data)))$value
+  print(paste("The following genes were not found:", genes.not.found))
   genes.plot <- (genes.plot %>% as_tibble() %>% dplyr::filter(value %in% rownames(seuratObj@data)))$value
-
   ident <- as.factor(x = seuratObj@ident)
   if (group.by != "ident") {
     ident <- as.factor(x = FetchData(
@@ -81,13 +84,13 @@ bubbleplot <- function(seuratObj,
     data.to.plot %<>% filter(genes.plot %in% avg.detect$gene_name)
   }
 
-  if(isTRUE(clust.x)){
+  if(isTRUE(cluster.x)){
     gene_dendro <- avg.expr %>% dist() %>% hclust %>% as.dendrogram()
     gene_order <- gene_dendro %>% order.dendrogram()
     data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro), ordered = TRUE)
   }
 
-  if(isTRUE(clust.y)){
+  if(isTRUE(cluster.y)){
     id_dendro <- avg.expr %>% t() %>% dist() %>% hclust %>% as.dendrogram()
     id_order <- id_dendro %>% order.dendrogram()
     data.to.plot$ident <- factor(data.to.plot$ident, levels = labels(id_dendro), ordered = TRUE)
@@ -97,14 +100,14 @@ bubbleplot <- function(seuratObj,
     mutate(avg.exp.scale = compositions::normalize(x = avg.exp))
 
   data.to.plot %<>% group_by(genes.plot) %>% filter(max(avg.exp.scale) > filter.exp.level)
-  
-  if(!isTRUE(clust.y)){
+
+  if(!isTRUE(cluster.y)){
      data.to.plot <- data.to.plot[mixedorder(data.to.plot$ident),]
   }
-  if(!isTRUE(clust.x)){
+  if(!isTRUE(cluster.x)){
      data.to.plot <- data.to.plot[mixedorder(data.to.plot$genes.plot),]
   }
-    
+
   g <- data.to.plot %>%
     ggplot(aes(x = genes.plot,
                y = ident,
@@ -113,7 +116,7 @@ bubbleplot <- function(seuratObj,
            ) +
     geom_point() +
     theme(axis.text.x = element_text(angle=x.lab.rot.angle, hjust = 1, size = x.lab.size),
-          axis.text.y = element_text(size = y.lab.size)) + 
+          axis.text.y = element_text(size = y.lab.size)) +
     labs(x = x.axis.title, y = y.axis.title, size = pct.legend.title, color = scale.legend.title) +
     scale_radius(range = c(0,5))
 
@@ -178,8 +181,8 @@ GObubbleplot <- function(seuratObj,
                          x.lab.size = 9,
                          y.lab.size = 9,
                          x.lab.rot.angle = 45,
-                         clust.x = TRUE,
-                         clust.y = TRUE,
+                         cluster.x = TRUE,
+                         cluster.y = TRUE,
                          colors.use = NULL,
                          do.return = FALSE,
                          ...){
@@ -201,8 +204,8 @@ GObubbleplot <- function(seuratObj,
                      x.lab.size = x.lab.size,
                      y.lab.size = y.lab.size,
                      x.lab.rot.angle = x.lab.rot.angle,
-                     clust.x = clust.x,
-                     clust.y = clust.y,
+                     cluster.x = cluster.x,
+                     cluster.y = cluster.y,
                      colors.use = colors.use,
                      do.return = do.return,
                      ...)

@@ -5,9 +5,10 @@
 \title{GObubbleplot}
 \usage{
 GObubbleplot(seuratObj, go_term, group.by = "ident", filter = NULL,
-  filter.exp.pct = NULL, filter.exp.pct.thresh = 0, filter.exp.level = 0,
-  x.lab.size = 9, y.lab.size = 9, x.lab.rot.angle = 45, clust.x = TRUE,
-  clust.y = TRUE, colors.use = NULL, do.return = FALSE)
+  filter.exp.pct = NULL, filter.exp.pct.thresh = 0,
+  filter.exp.level = 0, x.lab.size = 9, y.lab.size = 9,
+  x.lab.rot.angle = 45, clust.x = TRUE, clust.y = TRUE,
+  colors.use = NULL, do.return = FALSE, ...)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
@@ -25,6 +26,8 @@ GObubbleplot(seuratObj, go_term, group.by = "ident", filter = NULL,
 \item{filter.exp.level}{Display only genes that are expressed above this level in at least one group. (default: 0)}
 
 \item{do.return}{If TRUE, return a ggplot2 object instead of displaying chart}
+
+\item{...}{Additional options to pass to bubbleplot}
 }
 \value{
 if isTRUE(do.return), a ggplot2 object

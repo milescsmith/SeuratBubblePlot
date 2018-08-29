@@ -5,14 +5,18 @@
 \title{bubbleplot}
 \usage{
 bubbleplot(seuratObj, genes.plot, filter.exp.pct = NULL,
-  filter.exp.pct.thresh = 0, filter.exp.level = 0, group.by = "ident",
-  x.lab.size = 9, y.lab.size = 9, x.lab.rot.angle = 45, clust.x = TRUE,
-  clust.y = TRUE, colors.use = NULL, do.return = FALSE)
+  filter.exp.pct.thresh = 0, filter.exp.level = 0,
+  group.by = "ident", x.lab.size = 9, y.lab.size = 9,
+  x.axis.title = "Genes", y.axis.title = "Grouping",
+  pct.legend.title = "Percent group expressing",
+  scale.legend.title = "Average scaled expression",
+  x.lab.rot.angle = 45, clust.x = FALSE, clust.y = TRUE,
+  colors.use = NULL, do.return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
 
-\item{genes.plot}{A list of genes to display.}
+\item{genes.plot}{A list of genes to display. Note: Gene and protein names are converted to the proper gene name automagically by HGNChelper::checkGeneSymbols and those not appearing in the dataset are rejected.}
 
 \item{filter.exp.pct}{Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)}
 
@@ -28,13 +32,13 @@ bubbleplot(seuratObj, genes.plot, filter.exp.pct = NULL,
 
 \item{x.lab.rot.angle}{Angle to rotate the x-axis labels. (default: 45°)}
 
-\item{clust.x}{Arrange the x-axis variables using hierarchical clustering. (default: TRUE)}
-
-\item{clust.y}{Arrange the y-axis variables using hierarchical clustering. (default: TRUE)}
-
 \item{colors.use}{Color palette to use to display expression levels. (default: "Reds")}
 
 \item{do.return}{Return a ggplot2 object instead of displaying}
+
+\item{cluster.x}{Arrange the x-axis variables using hierarchical clustering. (default: TRUE)}
+
+\item{cluster.y}{Arrange the y-axis variables using hierarchical clustering. (default: FALSE)}
 }
 \value{
 if isTRUE(do.return), a ggplot2 object
