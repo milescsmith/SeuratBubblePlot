@@ -47,7 +47,7 @@ bubbleplot <- function(seuratObj,
                        filter.exp.pct = NULL,
                        filter.exp.pct.thresh = 0,
                        filter.exp.level = 0,
-                       group.by = 'ident',
+                       group.by = "ident",
                        x.lab.size = 9,
                        y.lab.size = 9,
                        x.axis.title = "Genes",
@@ -58,18 +58,24 @@ bubbleplot <- function(seuratObj,
                        cluster.x = TRUE,
                        cluster.y = FALSE,
                        colors.use = NULL,
-                       do.return = FALSE){
+                       do.return = FALSE) {
 
   genes.plot <- checkGeneSymbols(x = genes.plot,
-                                 unmapped.as.na = FALSE)$Suggested.Symbol
-    %>% unique()
-  genes.not.found <- (genes.plot %>%
-                        as_tibble() %>%
-                        dplyr::filter(!value %in% rownames(seuratObj@data)))$value
+                                 unmapped.as.na = FALSE) %>%
+    select(Suggested.Symbol) %>%
+    as.list() %>%
+    unique()
+  genes.not.found <- genes.plot %>%
+    as_tibble() %>%
+    dplyr::filter(!value %in% rownames(seuratObj@data)) %>%
+    dplyr::select(value) %>%
+    as.list()
   print(glue("The following genes were not found: {genes.not.found}"))
-  genes.plot <- (genes.plot %>%
-                   as_tibble() %>%
-                   dplyr::filter(value %in% rownames(seuratObj@data)))$value
+  genes.plot <- genes.plot %>%
+    as_tibble() %>%
+    dplyr::filter(value %in% rownames(seuratObj@data)) %>%
+    select(value) %>%
+    as.list()
   ident <- as.factor(x = seuratObj@ident)
   if (group.by != "ident") {
     ident <- as.factor(x = FetchData(
@@ -85,7 +91,7 @@ bubbleplot <- function(seuratObj,
     as.data.frame()
   data.to.plot$ident <- ident
   data.to.plot <- rownames_to_column(df = data.to.plot, var = "cell")
-  #colnames(data.to.plot)[dim(data.to.plot)[2]] <- "ident"
+
   data.to.plot <- data.to.plot %>% gather(key = genes.plot,
                                           value = expression, -c(cell, ident))
 
@@ -120,7 +126,7 @@ bubbleplot <- function(seuratObj,
       dist() %>%
       hclust %>%
       as.dendrogram()
-    #gene_order <- gene.dendro %>% order.dendrogram()
+
     data.to.plot$genes.plot <- factor(data.to.plot$genes.plot,
                                       levels = labels(gene.dendro),
                                       ordered = TRUE)
@@ -132,7 +138,7 @@ bubbleplot <- function(seuratObj,
       dist() %>%
       hclust() %>%
       as.dendrogram()
-    #id_order <- id_dendro %>% order.dendrogram()
+
     data.to.plot$ident <- factor(data.to.plot$ident,
                                  levels = labels(id_dendro),
                                  ordered = TRUE)
