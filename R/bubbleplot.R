@@ -62,7 +62,7 @@ bubbleplot <- function(seuratObj,
 
   genes.plot <- checkGeneSymbols(x = genes.plot,
                                  unmapped.as.na = FALSE) %>%
-    select(Suggested.Symbol) %>%
+    dplyr::select(Suggested.Symbol) %>%
     as.list() %>%
     unique()
   genes.not.found <- genes.plot %>%
@@ -70,11 +70,11 @@ bubbleplot <- function(seuratObj,
     dplyr::filter(!value %in% rownames(seuratObj@data)) %>%
     dplyr::select(value) %>%
     as.list()
-  print(glue("The following genes were not found: {genes.not.found}"))
+  #print(glue("The following genes were not found: {genes.not.found}"))
   genes.plot <- genes.plot %>%
     as_tibble() %>%
     dplyr::filter(value %in% rownames(seuratObj@data)) %>%
-    select(value) %>%
+    dplyr::select(value) %>%
     as.list()
   ident <- as.factor(x = seuratObj@ident)
   if (group.by != "ident") {
@@ -117,7 +117,7 @@ bubbleplot <- function(seuratObj,
     avg.detect %<>%
       rownames_to_column('gene_name') %>%
       filter(highest > filter.exp.pct) %>%
-      select(gene_name)
+      dplyr::select(gene_name)
     data.to.plot %<>% filter(genes.plot %in% avg.detect$gene_name)
   }
 
