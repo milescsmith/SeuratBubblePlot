@@ -7,7 +7,7 @@
 GObubbleplot(seuratObj, go_term, group.by = "ident", filter = NULL,
   filter.exp.pct = NULL, filter.exp.pct.thresh = 0,
   filter.exp.level = 0, x.lab.size = 9, y.lab.size = 9,
-  x.lab.rot.angle = 45, clust.x = TRUE, clust.y = TRUE,
+  x.lab.rot.angle = 45, cluster.x = TRUE, cluster.y = TRUE,
   colors.use = NULL, do.return = FALSE, ...)
 }
 \arguments{

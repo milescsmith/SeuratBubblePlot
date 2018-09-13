@@ -10,21 +10,27 @@ bubbleplot(seuratObj, genes.plot, filter.exp.pct = NULL,
   x.axis.title = "Genes", y.axis.title = "Grouping",
   pct.legend.title = "Percent group expressing",
   scale.legend.title = "Average scaled expression",
-  x.lab.rot.angle = 45, clust.x = FALSE, clust.y = TRUE,
+  x.lab.rot.angle = 45, cluster.x = TRUE, cluster.y = FALSE,
   colors.use = NULL, do.return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
 
-\item{genes.plot}{A list of genes to display. Note: Gene and protein names are converted to the proper gene name automagically by HGNChelper::checkGeneSymbols and those not appearing in the dataset are rejected.}
+\item{genes.plot}{A list of genes to display. Note: Gene and protein names
+are converted to the proper gene name automagically by
+HGNChelper::checkGeneSymbols and those not appearing in the dataset are
+rejected.}
 
-\item{filter.exp.pct}{Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)}
+\item{filter.exp.pct}{Display only genes that are expressed above this
+fraction of cells in at least one group. (default: NULL)}
 
 \item{filter.exp.pct.thresh}{Threshold for expression fraction. (default: 0)}
 
-\item{filter.exp.level}{Display only genes that are expressed above this level in at least one group. (default: 0)}
+\item{filter.exp.level}{Display only genes that are expressed above this
+level in at least one group. (default: 0)}
 
-\item{group.by}{Variable by which to group cells.  Can be cluster identities or any column from the meta.data slot. (default: ident)}
+\item{group.by}{Variable by which to group cells.  Can be cluster identities
+or any column from the meta.data slot. (default: ident)}
 
 \item{x.lab.size}{Font size for the x-axis labels. (default: 9)}
 
@@ -32,13 +38,16 @@ bubbleplot(seuratObj, genes.plot, filter.exp.pct = NULL,
 
 \item{x.lab.rot.angle}{Angle to rotate the x-axis labels. (default: 45°)}
 
-\item{colors.use}{Color palette to use to display expression levels. (default: "Reds")}
+\item{cluster.x}{Arrange the x-axis variables using hierarchical clustering.
+(default: TRUE)}
+
+\item{cluster.y}{Arrange the y-axis variables using hierarchical clustering.
+(default: FALSE)}
+
+\item{colors.use}{Color palette to use to display expression levels.
+(default: "Reds")}
 
 \item{do.return}{Return a ggplot2 object instead of displaying}
-
-\item{cluster.x}{Arrange the x-axis variables using hierarchical clustering. (default: TRUE)}
-
-\item{cluster.y}{Arrange the y-axis variables using hierarchical clustering. (default: FALSE)}
 }
 \value{
 if isTRUE(do.return), a ggplot2 object

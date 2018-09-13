@@ -3,17 +3,26 @@
 #' Display percentage of cells expressing and levels for a set of genes.
 #'
 #' @param seuratObj Seurat object
-#' @param genes.plot A list of genes to display. Note: Gene and protein names are converted to the proper gene name automagically by HGNChelper::checkGeneSymbols and those not appearing in the dataset are rejected.
-#' @param filter.exp.pct Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)
+#' @param genes.plot A list of genes to display. Note: Gene and protein names
+#'   are converted to the proper gene name automagically by
+#'   HGNChelper::checkGeneSymbols and those not appearing in the dataset are
+#'   rejected.
+#' @param filter.exp.pct Display only genes that are expressed above this
+#'   fraction of cells in at least one group. (default: NULL)
 #' @param filter.exp.pct.thresh Threshold for expression fraction. (default: 0)
-#' @param filter.exp.level Display only genes that are expressed above this level in at least one group. (default: 0)
-#' @param group.by Variable by which to group cells.  Can be cluster identities or any column from the meta.data slot. (default: ident)
+#' @param filter.exp.level Display only genes that are expressed above this
+#'   level in at least one group. (default: 0)
+#' @param group.by Variable by which to group cells.  Can be cluster identities
+#'   or any column from the meta.data slot. (default: ident)
 #' @param x.lab.size Font size for the x-axis labels. (default: 9)
 #' @param y.lab.size Font size for the y-axis labels. (default: 9)
 #' @param x.lab.rot.angle Angle to rotate the x-axis labels. (default: 45°)
-#' @param cluster.x Arrange the x-axis variables using hierarchical clustering. (default: TRUE)
-#' @param cluster.y Arrange the y-axis variables using hierarchical clustering. (default: FALSE)
-#' @param colors.use Color palette to use to display expression levels. (default: "Reds")
+#' @param cluster.x Arrange the x-axis variables using hierarchical clustering.
+#'   (default: TRUE)
+#' @param cluster.y Arrange the y-axis variables using hierarchical clustering.
+#'   (default: FALSE)
+#' @param colors.use Color palette to use to display expression levels.
+#'   (default: "Reds")
 #' @param do.return Return a ggplot2 object instead of displaying
 #'
 #' @import ggplot2
@@ -26,6 +35,7 @@
 #' @importFrom compositions normalize
 #' @importFrom gtools mixedorder
 #' @importFrom HGNChelper checkGeneSymbols
+#' @importFrom glue glue
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
@@ -33,6 +43,7 @@
 #' @examples BubblePlot(seuratObj = obj, genes.plot = c("IFIT1","IFITM1","IFITM3"), group.by = "treatment")
 bubbleplot <- function(seuratObj,
                        genes.plot,
+                       use.scaled = FALSE,
                        filter.exp.pct = NULL,
                        filter.exp.pct.thresh = 0,
                        filter.exp.level = 0,
@@ -49,10 +60,16 @@ bubbleplot <- function(seuratObj,
                        colors.use = NULL,
                        do.return = FALSE){
 
-  genes.plot <- (HGNChelper::checkGeneSymbols(x = genes.plot))$Suggested.Symbol
-  genes.not.found <- (genes.plot %>% as_tibble() %>% dplyr::filter(!value %in% rownames(seuratObj@data)))$value
-  print(paste("The following genes were not found:", genes.not.found))
-  genes.plot <- (genes.plot %>% as_tibble() %>% dplyr::filter(value %in% rownames(seuratObj@data)))$value
+  genes.plot <- checkGeneSymbols(x = genes.plot,
+                                 unmapped.as.na = FALSE)$Suggested.Symbol
+    %>% unique()
+  genes.not.found <- (genes.plot %>%
+                        as_tibble() %>%
+                        dplyr::filter(!value %in% rownames(seuratObj@data)))$value
+  print(glue("The following genes were not found: {genes.not.found}"))
+  genes.plot <- (genes.plot %>%
+                   as_tibble() %>%
+                   dplyr::filter(value %in% rownames(seuratObj@data)))$value
   ident <- as.factor(x = seuratObj@ident)
   if (group.by != "ident") {
     ident <- as.factor(x = FetchData(
@@ -61,45 +78,74 @@ bubbleplot <- function(seuratObj,
     )[, 1])
   }
 
-  data.to.plot <- data.frame(FetchData(object = seuratObj, vars.all = genes.plot))
+  seuratObj <- correctGeneNames(seuratObj)
+  data.to.plot <- FetchData(object = seuratObj,
+                            vars.all = genes.plot,
+                            use.scaled = use.scaled) %>%
+    as.data.frame()
   data.to.plot$ident <- ident
   data.to.plot <- rownames_to_column(df = data.to.plot, var = "cell")
   #colnames(data.to.plot)[dim(data.to.plot)[2]] <- "ident"
   data.to.plot <- data.to.plot %>% gather(key = genes.plot,
                                           value = expression, -c(cell, ident))
 
-  data.to.plot <- data.to.plot %>% group_by(ident, genes.plot) %>%
+  data.to.plot <- data.to.plot %>%
+    group_by(ident, genes.plot) %>%
     summarize(avg.exp = mean(expm1(x = expression)),
               pct.exp = PercentAbove(x = expression, threshold = 0),
               n = n())
 
-  data.to.plot$genes.plot <- sub(x = data.to.plot$genes.plot, pattern = "\\.", replacement = "-")
-  avg.expr <- AverageExpression(object = SetAllIdent(seuratObj, group.by), genes.use = genes.plot, show.progress = FALSE) %>%
+  data.to.plot$genes.plot <- sub(x = data.to.plot$genes.plot,
+                                 pattern = "\\.",
+                                 replacement = "-")
+  avg.expr <- AverageExpression(object = SetAllIdent(seuratObj, group.by),
+                                genes.use = genes.plot,
+                                show.progress = FALSE) %>%
     scale()
 
   if (!is.null(filter.exp.pct)){
-    avg.detect <- AverageDetectionRate(object = seuratObj, thresh.min = filter.exp.pct.thresh)
-    avg.detect$highest <- avg.detect %>% apply(., MARGIN = 1, FUN = max)
-    avg.detect %<>% rownames_to_column('gene_name') %>% filter(highest > filter.exp.pct) %>% select(gene_name)
+    avg.detect <- AverageDetectionRate(object = seuratObj,
+                                       thresh.min = filter.exp.pct.thresh)
+    avg.detect$highest <- avg.detect %>%
+      apply(., MARGIN = 1, FUN = max)
+    avg.detect %<>%
+      rownames_to_column('gene_name') %>%
+      filter(highest > filter.exp.pct) %>%
+      select(gene_name)
     data.to.plot %<>% filter(genes.plot %in% avg.detect$gene_name)
   }
 
-  if(isTRUE(cluster.x)){
-    gene_dendro <- avg.expr %>% dist() %>% hclust %>% as.dendrogram()
-    gene_order <- gene_dendro %>% order.dendrogram()
-    data.to.plot$genes.plot <- factor(data.to.plot$genes.plot, levels = labels(gene_dendro), ordered = TRUE)
+  if (isTRUE(cluster.x)) {
+    gene.dendro <- avg.expr %>%
+      dist() %>%
+      hclust %>%
+      as.dendrogram()
+    #gene_order <- gene.dendro %>% order.dendrogram()
+    data.to.plot$genes.plot <- factor(data.to.plot$genes.plot,
+                                      levels = labels(gene.dendro),
+                                      ordered = TRUE)
   }
 
-  if(isTRUE(cluster.y)){
-    id_dendro <- avg.expr %>% t() %>% dist() %>% hclust %>% as.dendrogram()
-    id_order <- id_dendro %>% order.dendrogram()
-    data.to.plot$ident <- factor(data.to.plot$ident, levels = labels(id_dendro), ordered = TRUE)
+  if (isTRUE(cluster.y)) {
+    id_dendro <- avg.expr %>%
+      t() %>%
+      dist() %>%
+      hclust() %>%
+      as.dendrogram()
+    #id_order <- id_dendro %>% order.dendrogram()
+    data.to.plot$ident <- factor(data.to.plot$ident,
+                                 levels = labels(id_dendro),
+                                 ordered = TRUE)
   }
 
-  data.to.plot <- data.to.plot %>% ungroup() %>% group_by(genes.plot) %>%
+  data.to.plot <- data.to.plot %>%
+    ungroup() %>%
+    group_by(genes.plot) %>%
     mutate(avg.exp.scale = compositions::normalize(x = avg.exp))
 
-  data.to.plot %<>% group_by(genes.plot) %>% filter(max(avg.exp.scale) > filter.exp.level)
+  data.to.plot %<>%
+    group_by(genes.plot) %>%
+    filter(max(avg.exp.scale) > filter.exp.level)
 
   if(!isTRUE(cluster.y)){
      data.to.plot <- data.to.plot[mixedorder(data.to.plot$ident),]
@@ -155,10 +201,13 @@ PercentAbove <- function(x, threshold){
 #' @param seuratObj Seurat object
 #' @param go_term Gene Ontology term identifier (i.e. GO:0046774)
 #' @param group.by Factor by which to group cells.  (default: ident)
-#' @param filter A list of gene names to filter the GO term members against. (default: all genes in seuratObj)
-#' @param filter.exp.pct Display only genes that are expressed above this fraction of cells in at least one group. (default: NULL)
+#' @param filter A list of gene names to filter the GO term members against.
+#'   (default: all genes in seuratObj)
+#' @param filter.exp.pct Display only genes that are expressed above this
+#'   fraction of cells in at least one group. (default: NULL)
 #' @param filter.exp.pct.thresh Threshold for expression fraction. (default: 0)
-#' @param filter.exp.level Display only genes that are expressed above this level in at least one group. (default: 0)
+#' @param filter.exp.level Display only genes that are expressed above this
+#'   level in at least one group. (default: 0)
 #' @param ... Additional options to pass to bubbleplot
 #'
 #' @param do.return If TRUE, return a ggplot2 object instead of displaying chart
@@ -166,6 +215,7 @@ PercentAbove <- function(x, threshold){
 #' @import dplyr
 #' @import org.Hs.eg.db
 #' @importFrom magrittr "%>%"
+#' @importFrom R.utils exit
 #'
 #' @return if isTRUE(do.return), a ggplot2 object
 #' @export
@@ -187,14 +237,16 @@ GObubbleplot <- function(seuratObj,
                          do.return = FALSE,
                          ...){
 
-  if(is.null(filter)){
+  if (is.null(filter)) {
     filter <- rownames(seuratObj@data)
   }
 
-  go_genes_to_plot <- unlist(BiocGenerics::mget(BiocGenerics::get(go_term,org.Hs.egGO2ALLEGS), org.Hs.egSYMBOL))
+  go_genes_to_plot <- unlist(BiocGenerics::mget(
+    BiocGenerics::get(go_term,org.Hs.egGO2ALLEGS),
+    org.Hs.egSYMBOL))
   go_genes_to_plot <- go_genes_to_plot[which(go_genes_to_plot %in% filter)]
 
-  if(length(go_genes_to_plot) > 0){
+  if (length(go_genes_to_plot) > 0) {
     gg <- bubbleplot(seuratObj,
                      genes.plot = unique(go_genes_to_plot),
                      group.by = group.by,
@@ -214,7 +266,7 @@ GObubbleplot <- function(seuratObj,
     exit()
   }
 
-  if(isTRUE(do.return)){
+  if (isTRUE(do.return)) {
     return(gg)
   } else {
     gg
