@@ -15,7 +15,7 @@ correctGeneNames <- function(seuratObj){
   corrected.names <- checkGeneSymbols(rownames(seuratObj@raw.data),
                                       unmapped.as.na = FALSE)
 
-  rownames(seuratObj@raw.data) <- mapvalues(x = rownames(ea_dca@raw.data),
+  rownames(seuratObj@raw.data) <- mapvalues(x = rownames(seuratObj@raw.data),
                                             from = corrected.names$x,
                                             to = corrected.names$Suggested.Symbol)
 
