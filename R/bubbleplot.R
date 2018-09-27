@@ -58,12 +58,16 @@ bubbleplot <- function(seuratObj,
                        cluster.x = TRUE,
                        cluster.y = FALSE,
                        colors.use = NULL,
+                       translate.gene.names = FALSE,
                        do.return = FALSE) {
 
-  genes.plot <- checkGeneSymbols(x = genes.plot,
-                                 unmapped.as.na = FALSE) %>%
-    dplyr::pull(Suggested.Symbol) %>%
-    unique()
+  if (translate.gene.names){
+    genes.plot <- checkGeneSymbols(x = genes.plot,
+                                   unmapped.as.na = FALSE) %>%
+      dplyr::pull(Suggested.Symbol) %>%
+      unique()
+  }
+
   genes.not.found <- genes.plot %>%
     as_tibble() %>%
     dplyr::filter(!value %in% rownames(seuratObj@data)) %>%
