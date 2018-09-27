@@ -4,14 +4,14 @@
 \alias{bubbleplot}
 \title{bubbleplot}
 \usage{
-bubbleplot(seuratObj, genes.plot, filter.exp.pct = NULL,
-  filter.exp.pct.thresh = 0, filter.exp.level = 0,
-  group.by = "ident", x.lab.size = 9, y.lab.size = 9,
-  x.axis.title = "Genes", y.axis.title = "Grouping",
+bubbleplot(seuratObj, genes.plot, use.scaled = FALSE,
+  filter.exp.pct = NULL, filter.exp.pct.thresh = 0,
+  filter.exp.level = 0, group.by = "ident", x.lab.size = 9,
+  y.lab.size = 9, x.axis.title = "Genes", y.axis.title = "Grouping",
   pct.legend.title = "Percent group expressing",
   scale.legend.title = "Average scaled expression",
   x.lab.rot.angle = 45, cluster.x = TRUE, cluster.y = FALSE,
-  colors.use = NULL, do.return = FALSE)
+  colors.use = NULL, translate.gene.names = FALSE, do.return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
