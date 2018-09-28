@@ -76,6 +76,7 @@ bubbleplot <- function(seuratObj,
   }
 
   if (translate.gene.names) {
+    seuratObj <- correctGeneNames(seuratObj)
     genes.plot <- checkGeneSymbols(
       x = genes.plot,
       unmapped.as.na = FALSE
@@ -104,7 +105,6 @@ bubbleplot <- function(seuratObj,
     )[, 1])
   }
 
-  seuratObj <- correctGeneNames(seuratObj)
   data.to.plot <- FetchData(
     object = seuratObj,
     vars.all = genes.plot,
