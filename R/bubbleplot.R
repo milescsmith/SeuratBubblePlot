@@ -196,7 +196,7 @@ bubbleplot <- function(seuratObj,
   if(annotated.gene.list) {
     data.to.plot$annotations <- plyr::mapvalues(x = data.to.plot$genes.plot,
                                                from = genes.list$genes,
-                                               to = genes.list$annotations)
+                                               to = as.character(genes.list$annotations))
   }
 
   g <- data.to.plot %>%
