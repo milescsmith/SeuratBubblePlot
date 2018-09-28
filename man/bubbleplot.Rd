@@ -11,15 +11,17 @@ bubbleplot(seuratObj, genes.plot, use.scaled = FALSE,
   pct.legend.title = "Percent group expressing",
   scale.legend.title = "Average scaled expression",
   x.lab.rot.angle = 45, cluster.x = TRUE, cluster.y = FALSE,
-  colors.use = NULL, translate.gene.names = FALSE, do.return = FALSE)
+  colors.use = NULL, translate.gene.names = FALSE,
+  annotated.gene.list = FALSE, do.return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
 
-\item{genes.plot}{A list of genes to display. Note: Gene and protein names
-are converted to the proper gene name automagically by
-HGNChelper::checkGeneSymbols and those not appearing in the dataset are
-rejected.}
+\item{genes.plot}{Either a list of genes or a data frame of annotated genes
+to display (see 'annotated.gene.list'). Note: Gene and protein names
+may be converted to the proper gene name automagically by
+HGNChelper::checkGeneSymbols if 'translate.gene.names' is TRUE.
+Genes not appearing in the dataset are skipped.}
 
 \item{filter.exp.pct}{Display only genes that are expressed above this
 fraction of cells in at least one group. (default: NULL)}
@@ -46,6 +48,14 @@ or any column from the meta.data slot. (default: ident)}
 
 \item{colors.use}{Color palette to use to display expression levels.
 (default: "Reds")}
+
+\item{translate.gene.names}{Should gene names be checked and translated to
+their correct HUGO Gene Nomenclature Committee name? (default: FALSE)}
+
+\item{annotated.gene.list}{Is the gene list annotated?  If so, the genes will be
+faceted using their annontations.  Requires that 'genes.plot' is a two column
+with the annotations in a column named 'annotations' and genes in a column
+named 'genes'. (default: FALSE)}
 
 \item{do.return}{Return a ggplot2 object instead of displaying}
 }

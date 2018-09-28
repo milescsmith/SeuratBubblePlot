@@ -11,21 +11,28 @@
 #' @export
 #'
 #' @examples
-correctGeneNames <- function(seuratObj){
+correctGeneNames <- function(seuratObj) {
   corrected.names <- checkGeneSymbols(rownames(seuratObj@raw.data),
-                                      unmapped.as.na = FALSE)
+    unmapped.as.na = FALSE
+  )
 
-  rownames(seuratObj@raw.data) <- mapvalues(x = rownames(seuratObj@raw.data),
-                                            from = corrected.names$x,
-                                            to = corrected.names$Suggested.Symbol)
+  rownames(seuratObj@raw.data) <- mapvalues(
+    x = rownames(seuratObj@raw.data),
+    from = corrected.names$x,
+    to = corrected.names$Suggested.Symbol
+  )
 
-  rownames(seuratObj@data) <- mapvalues(x = rownames(seuratObj@data),
-                                        from = corrected.names$x,
-                                        to = corrected.names$Suggested.Symbol)
+  rownames(seuratObj@data) <- mapvalues(
+    x = rownames(seuratObj@data),
+    from = corrected.names$x,
+    to = corrected.names$Suggested.Symbol
+  )
 
-  rownames(seuratObj@scale.data) <- mapvalues(x = rownames(seuratObj@scale.data),
-                                              from = corrected.names$x,
-                                              to = corrected.names$Suggested.Symbol)
+  rownames(seuratObj@scale.data) <- mapvalues(
+    x = rownames(seuratObj@scale.data),
+    from = corrected.names$x,
+    to = corrected.names$Suggested.Symbol
+  )
 
   return(seuratObj)
 }
