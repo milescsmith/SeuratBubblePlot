@@ -76,6 +76,7 @@ bubbleplot <- function(seuratObj,
   }
 
   if (translate.gene.names) {
+    seuratObj <- correctGeneNames(seuratObj)
     genes.plot <- checkGeneSymbols(
       x = genes.plot,
       unmapped.as.na = FALSE
@@ -104,7 +105,6 @@ bubbleplot <- function(seuratObj,
     )[, 1])
   }
 
-  seuratObj <- correctGeneNames(seuratObj)
   data.to.plot <- FetchData(
     object = seuratObj,
     vars.all = genes.plot,
@@ -233,6 +233,101 @@ bubbleplot <- function(seuratObj,
   } else {
     g
   }
+}
+
+#' PercentAbove
+#'
+#' Return the percentage of a list that is above a threshold
+#' @param x A list of numeric values.
+#' @param threshold A numeric threshold value.
+#'
+#' @return double
+#' @export
+#'
+#' @examples PercentAbove(x = c(1,2,3), threshold = 2)
+PercentAbove <- function(x, threshold){
+  return(length(x = x[x > threshold]) / length(x = x))
+}
+
+
+#' GObubbleplot
+#'
+#' Produces a Bubble Plot for the genes of a given GO term.
+#'
+#' @param seuratObj Seurat object
+#' @param go_term Gene Ontology term identifier (i.e. GO:0046774)
+#' @param group.by Factor by which to group cells.  (default: ident)
+#' @param filter A list of gene names to filter the GO term members against.
+#'   (default: all genes in seuratObj)
+#' @param filter.exp.pct Display only genes that are expressed above this
+#'   fraction of cells in at least one group. (default: NULL)
+#' @param filter.exp.pct.thresh Threshold for expression fraction. (default: 0)
+#' @param filter.exp.level Display only genes that are expressed above this
+#'   level in at least one group. (default: 0)
+#' @param ... Additional options to pass to bubbleplot
+#'
+#' @param do.return If TRUE, return a ggplot2 object instead of displaying chart
+#'
+#' @import dplyr
+#' @import org.Hs.eg.db
+#' @importFrom magrittr "%>%"
+#' @importFrom R.utils exit
+#'
+#' @return if isTRUE(do.return), a ggplot2 object
+#' @export
+#'
+#' @examples GObubbleplot(seuratObj = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
+GObubbleplot <- function(seuratObj,
+                         go_term,
+                         group.by = "ident",
+                         filter = NULL,
+                         filter.exp.pct = NULL,
+                         filter.exp.pct.thresh = 0,
+                         filter.exp.level = 0,
+                         x.lab.size = 9,
+                         y.lab.size = 9,
+                         x.lab.rot.angle = 45,
+                         cluster.x = TRUE,
+                         cluster.y = TRUE,
+                         colors.use = NULL,
+                         do.return = FALSE,
+                         ...){
+
+  if (is.null(filter)) {
+    filter <- rownames(seuratObj@data)
+  }
+
+  go_genes_to_plot <- unlist(BiocGenerics::mget(
+    BiocGenerics::get(go_term,org.Hs.egGO2ALLEGS),
+    org.Hs.egSYMBOL))
+  go_genes_to_plot <- go_genes_to_plot[which(go_genes_to_plot %in% filter)]
+
+  if (length(go_genes_to_plot) > 0) {
+    gg <- bubbleplot(seuratObj,
+                     genes.plot = unique(go_genes_to_plot),
+                     group.by = group.by,
+                     filter.exp.pct = filter.exp.pct,
+                     filter.exp.pct.thresh = filter.exp.pct.thresh,
+                     filter.exp.level = filter.exp.level,
+                     x.lab.size = x.lab.size,
+                     y.lab.size = y.lab.size,
+                     x.lab.rot.angle = x.lab.rot.angle,
+                     cluster.x = cluster.x,
+                     cluster.y = cluster.y,
+                     colors.use = colors.use,
+                     do.return = do.return,
+                     ...)
+  } else {
+    print("No genes for that term are expressed in the dataset.")
+    exit()
+  }
+
+  if (isTRUE(do.return)) {
+    return(gg)
+  } else {
+    gg
+  }
+
 }
 
 #' PercentAbove
