@@ -19,7 +19,6 @@
 #' @import dplyr
 #' @import org.Hs.eg.db
 #' @importFrom magrittr "%>%"
-#' @importFrom R.utils exit
 #'
 #' @return if isTRUE(do_return), a ggplot2 object
 #' @export
@@ -67,8 +66,7 @@ GObubbleplot <- function(seuratObj,
                      do_return = do_return,
                      ...)
   } else {
-    print("No genes for that term are expressed in the dataset.")
-    exit()
+    stop("No genes for that term are expressed in the dataset.")
   }
 
   if (isTRUE(do_return)) {
