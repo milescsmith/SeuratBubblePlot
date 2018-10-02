@@ -4,67 +4,67 @@
 \alias{bubbleplot}
 \title{bubbleplot}
 \usage{
-bubbleplot(seuratObj, genes.plot, use.scaled = FALSE,
-  filter.exp.pct = NULL, filter.exp.pct.thresh = 0,
-  filter.exp.level = 0, group.by = "ident", x.lab.size = 9,
-  y.lab.size = 9, x.axis.title = "Genes", y.axis.title = "Grouping",
-  pct.legend.title = "Percent group expressing",
-  scale.legend.title = "Average scaled expression",
-  x.lab.rot.angle = 45, cluster.x = TRUE, cluster.y = FALSE,
-  colors.use = NULL, translate.gene.names = FALSE,
-  annotated.gene.list = FALSE, do.return = FALSE)
+bubbleplot(seuratObj, genes_plot, use_scaled = FALSE,
+  filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
+  filter_exp_level = 0, group_by = "ident", x_lab_size = 9,
+  y_lab_size = 9, x_axis_title = "Genes", y_axis_title = "Grouping",
+  pct_legend_title = "Percent group expressing",
+  scale_legend_title = "Average scaled expression",
+  x_lab_rot_angle = 45, cluster_x = TRUE, cluster_y = FALSE,
+  colors_use = NULL, translate_gene_names = FALSE,
+  annotated_gene_list = FALSE, do_return = FALSE)
 }
 \arguments{
 \item{seuratObj}{Seurat object}
 
-\item{genes.plot}{Either a list of genes or a data frame of annotated genes
-to display (see 'annotated.gene.list'). Note: Gene and protein names
+\item{genes_plot}{Either a list of genes or a data frame of annotated genes
+to display (see 'annotated_gene_list'). Note: Gene and protein names
 may be converted to the proper gene name automagically by
-HGNChelper::checkGeneSymbols if 'translate.gene.names' is TRUE.
+HGNChelper::checkGeneSymbols if 'translate_gene_names' is TRUE.
 Genes not appearing in the dataset are skipped.}
 
-\item{filter.exp.pct}{Display only genes that are expressed above this
+\item{filter_exp_pct}{Display only genes that are expressed above this
 fraction of cells in at least one group. (default: NULL)}
 
-\item{filter.exp.pct.thresh}{Threshold for expression fraction. (default: 0)}
+\item{filter_exp_pct_thresh}{Threshold for expression fraction. (default: 0)}
 
-\item{filter.exp.level}{Display only genes that are expressed above this
+\item{filter_exp_level}{Display only genes that are expressed above this
 level in at least one group. (default: 0)}
 
-\item{group.by}{Variable by which to group cells.  Can be cluster identities
+\item{group_by}{Variable by which to group cells.  Can be cluster identities
 or any column from the meta.data slot. (default: ident)}
 
-\item{x.lab.size}{Font size for the x-axis labels. (default: 9)}
+\item{x_lab_size}{Font size for the x-axis labels. (default: 9)}
 
-\item{y.lab.size}{Font size for the y-axis labels. (default: 9)}
+\item{y_lab_size}{Font size for the y-axis labels. (default: 9)}
 
-\item{x.lab.rot.angle}{Angle to rotate the x-axis labels. (default: 45°)}
+\item{x_lab_rot_angle}{Angle to rotate the x-axis labels. (default: 45°)}
 
-\item{cluster.x}{Arrange the x-axis variables using hierarchical clustering.
+\item{cluster_x}{Arrange the x-axis variables using hierarchical clustering.
 (default: TRUE)}
 
-\item{cluster.y}{Arrange the y-axis variables using hierarchical clustering.
+\item{cluster_y}{Arrange the y-axis variables using hierarchical clustering.
 (default: FALSE)}
 
-\item{colors.use}{Color palette to use to display expression levels.
+\item{colors_use}{Color palette to use to display expression levels.
 (default: "Reds")}
 
-\item{translate.gene.names}{Should gene names be checked and translated to
+\item{translate_gene_names}{Should gene names be checked and translated to
 their correct HUGO Gene Nomenclature Committee name? (default: FALSE)}
 
-\item{annotated.gene.list}{Is the gene list annotated?  If so, the genes will be
-faceted using their annontations.  Requires that 'genes.plot' is a two column
+\item{annotated_gene_list}{Is the gene list annotated?  If so, the genes will be
+faceted using their annontations.  Requires that 'genes_plot' is a two column
 with the annotations in a column named 'annotations' and genes in a column
 named 'genes'. (default: FALSE)}
 
-\item{do.return}{Return a ggplot2 object instead of displaying}
+\item{do_return}{Return a ggplot2 object instead of displaying}
 }
 \value{
-if isTRUE(do.return), a ggplot2 object
+if isTRUE(do_return), a ggplot2 object
 }
 \description{
 Display percentage of cells expressing and levels for a set of genes.
 }
 \examples{
-BubblePlot(seuratObj = obj, genes.plot = c("IFIT1","IFITM1","IFITM3"), group.by = "treatment")
+BubblePlot(seuratObj = obj, genes_plot = c("IFIT1","IFITM1","IFITM3"), group_by = "treatment")
 }

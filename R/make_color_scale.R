@@ -15,7 +15,7 @@
 # "
 # " @examples make_color_scale(palette = "Reds", n = 100)
 make_color_scale <- function(palette = "viridis", gradations = 10) {
-  if (length(palette == 1)) {
+  if (length(palette) == 1) {
     if (palette %in% rownames(brewer.pal.info)) {
       pal <- colorRampPalette(brewer.pal(
         brewer.pal.info[palette, ]$maxcolors,
