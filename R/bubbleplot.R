@@ -198,7 +198,7 @@ bubbleplot <- function(seuratObj,
   }
   if (isTRUE(preserve_gene_order)){
     data_to_plot$genes_plot <- factor(data_to_plot$genes_plot,
-                                 levels = original_gene_order,
+                                 levels = unique(original_gene_order),
                                  ordered = TRUE)
   }
 
