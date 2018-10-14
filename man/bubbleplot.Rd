@@ -40,8 +40,6 @@ or any column from the meta.data slot. Default: ident}
 
 \item{x_lab_rot_angle}{Angle to rotate the x-axis labels. Default: 45°}
 
-\item{order_genes}{Should the genes by displayed in alphabetical order? Default: FALSE.}
-
 \item{cluster_x}{Arrange the x-axis variables using hierarchical clustering.
 Default: TRUE}
 
@@ -60,6 +58,9 @@ with the annotations in a column named 'annotations' and genes in a column
 named 'genes'. Default: FALSE}
 
 \item{do_return}{Return a ggplot2 object instead of displaying}
+
+\item{preserve_gene_order}{Should the genes by displayed in order in which
+they are given? Default: FALSE.}
 }
 \value{
 if isTRUE(do_return), a ggplot2 object

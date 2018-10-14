@@ -1,7 +1,7 @@
 Package: seuratBubblePlot
 Type: Package
 Title: Create bubble plot of scRNAseq expression data from Seurat
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: person("Miles", "Smith", email = "miles-smith@omrf.org", role = c("aut", "cre"))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: Creates a bubble plot displaying scRNAseq expression data where the size of bubbles indicates the percentage of a cell popluation expressing a gene and the color intensity indicates normalized expression levels.

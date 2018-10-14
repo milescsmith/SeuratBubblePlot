@@ -18,7 +18,8 @@
 #' @param x_lab_size Font size for the x-axis labels. Default: 9
 #' @param y_lab_size Font size for the y-axis labels. Default: 9
 #' @param x_lab_rot_angle Angle to rotate the x-axis labels. Default: 45°
-#' @param order_genes Should the genes by displayed in alphabetical order? Default: FALSE.
+#' @param preserve_gene_order Should the genes by displayed in order in which
+#'   they are given? Default: FALSE.
 #' @param cluster_x Arrange the x-axis variables using hierarchical clustering.
 #'   Default: TRUE
 #' @param cluster_y Arrange the y-axis variables using hierarchical clustering.
@@ -85,6 +86,7 @@ bubbleplot <- function(seuratObj,
       dplyr::pull(Suggested.Symbol) %>%
       unique()
   }
+  original_gene_order <- genes_plot
 
   genes_not_found <- genes_plot %>%
     as_tibble() %>%
@@ -191,10 +193,13 @@ bubbleplot <- function(seuratObj,
   if (!isTRUE(cluster_y)) {
     data_to_plot <- data_to_plot[mixedorder(data_to_plot$ident), ]
   }
-  if (!isTRUE(cluster_x) & isTRUE(order_genes)) {
+  if (!isTRUE(cluster_x)) {
     data_to_plot <- data_to_plot[mixedorder(data_to_plot$genes_plot), ]
-  } else {
-    data_to_plot <- data_to_plot[genes_plot, ]
+  }
+  if (isTRUE(preserve_gene_order)){
+    data_to_plot$genes_plot <- factor(data_to_plot$genes_plot,
+                                 levels = original_gene_order,
+                                 ordered = TRUE)
   }
 
   if (annotated_gene_list) {
