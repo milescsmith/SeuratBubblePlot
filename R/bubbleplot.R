@@ -193,7 +193,7 @@ bubbleplot <- function(seuratObj,
   }
   if (!isTRUE(cluster_x) & isTRUE(order_genes)) {
     data_to_plot <- data_to_plot[mixedorder(data_to_plot$genes_plot), ]
-  }  else {
+  } else {
     data_to_plot <- data_to_plot[genes_plot, ]
   }
 
