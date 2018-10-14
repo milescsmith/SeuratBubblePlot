@@ -9,27 +9,28 @@
 #'   HGNChelper::checkGeneSymbols if 'translate_gene_names' is TRUE.
 #'   Genes not appearing in the dataset are skipped.
 #' @param filter_exp_pct Display only genes that are expressed above this
-#'   fraction of cells in at least one group. (default: NULL)
-#' @param filter_exp_pct_thresh Threshold for expression fraction. (default: 0)
+#'   fraction of cells in at least one group. Default: NULL
+#' @param filter_exp_pct_thresh Threshold for expression fraction. Default: 0
 #' @param filter_exp_level Display only genes that are expressed above this
-#'   level in at least one group. (default: 0)
+#'   level in at least one group. Default: 0
 #' @param group_by Variable by which to group cells.  Can be cluster identities
-#'   or any column from the meta.data slot. (default: ident)
-#' @param x_lab_size Font size for the x-axis labels. (default: 9)
-#' @param y_lab_size Font size for the y-axis labels. (default: 9)
-#' @param x_lab_rot_angle Angle to rotate the x-axis labels. (default: 45°)
+#'   or any column from the meta.data slot. Default: ident
+#' @param x_lab_size Font size for the x-axis labels. Default: 9
+#' @param y_lab_size Font size for the y-axis labels. Default: 9
+#' @param x_lab_rot_angle Angle to rotate the x-axis labels. Default: 45°
+#' @param order_genes Should the genes by displayed in alphabetical order? Default: FALSE.
 #' @param cluster_x Arrange the x-axis variables using hierarchical clustering.
-#'   (default: TRUE)
+#'   Default: TRUE
 #' @param cluster_y Arrange the y-axis variables using hierarchical clustering.
-#'   (default: FALSE)
+#'   Default: FALSE
 #' @param colors_use Color palette to use to display expression levels.
-#'   (default: "Reds")
+#'   Default: "Reds"
 #' @param translate_gene_names Should gene names be checked and translated to
-#'   their correct HUGO Gene Nomenclature Committee name? (default: FALSE)
+#'   their correct HUGO Gene Nomenclature Committee name? Default: FALSE
 #' @param annotated_gene_list Is the gene list annotated?  If so, the genes will be
 #'   faceted using their annontations.  Requires that 'genes_plot' is a two column
 #'   with the annotations in a column named 'annotations' and genes in a column
-#'   named 'genes'. (default: FALSE)
+#'   named 'genes'. Default: FALSE
 #' @param do_return Return a ggplot2 object instead of displaying
 #'
 #' @import ggplot2
@@ -62,6 +63,7 @@ bubbleplot <- function(seuratObj,
                        pct_legend_title = "Percent group expressing",
                        scale_legend_title = "Average scaled expression",
                        x_lab_rot_angle = 45,
+                       order_genes = FALSE,
                        cluster_x = TRUE,
                        cluster_y = FALSE,
                        colors_use = NULL,
@@ -189,7 +191,7 @@ bubbleplot <- function(seuratObj,
   if (!isTRUE(cluster_y)) {
     data_to_plot <- data_to_plot[mixedorder(data_to_plot$ident), ]
   }
-  if (!isTRUE(cluster_x)) {
+  if (!isTRUE(cluster_x) & isTRUE(order_genes)) {
     data_to_plot <- data_to_plot[mixedorder(data_to_plot$genes_plot), ]
   }
 

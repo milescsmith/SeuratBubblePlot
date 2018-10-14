@@ -10,8 +10,8 @@ bubbleplot(seuratObj, genes_plot, use_scaled = FALSE,
   y_lab_size = 9, x_axis_title = "Genes", y_axis_title = "Grouping",
   pct_legend_title = "Percent group expressing",
   scale_legend_title = "Average scaled expression",
-  x_lab_rot_angle = 45, cluster_x = TRUE, cluster_y = FALSE,
-  colors_use = NULL, translate_gene_names = FALSE,
+  x_lab_rot_angle = 45, order_genes = FALSE, cluster_x = TRUE,
+  cluster_y = FALSE, colors_use = NULL, translate_gene_names = FALSE,
   annotated_gene_list = FALSE, do_return = FALSE)
 }
 \arguments{
@@ -24,38 +24,40 @@ HGNChelper::checkGeneSymbols if 'translate_gene_names' is TRUE.
 Genes not appearing in the dataset are skipped.}
 
 \item{filter_exp_pct}{Display only genes that are expressed above this
-fraction of cells in at least one group. (default: NULL)}
+fraction of cells in at least one group. Default: NULL}
 
-\item{filter_exp_pct_thresh}{Threshold for expression fraction. (default: 0)}
+\item{filter_exp_pct_thresh}{Threshold for expression fraction. Default: 0}
 
 \item{filter_exp_level}{Display only genes that are expressed above this
-level in at least one group. (default: 0)}
+level in at least one group. Default: 0}
 
 \item{group_by}{Variable by which to group cells.  Can be cluster identities
-or any column from the meta.data slot. (default: ident)}
+or any column from the meta.data slot. Default: ident}
 
-\item{x_lab_size}{Font size for the x-axis labels. (default: 9)}
+\item{x_lab_size}{Font size for the x-axis labels. Default: 9}
 
-\item{y_lab_size}{Font size for the y-axis labels. (default: 9)}
+\item{y_lab_size}{Font size for the y-axis labels. Default: 9}
 
-\item{x_lab_rot_angle}{Angle to rotate the x-axis labels. (default: 45°)}
+\item{x_lab_rot_angle}{Angle to rotate the x-axis labels. Default: 45°}
+
+\item{order_genes}{Should the genes by displayed in alphabetical order? Default: FALSE.}
 
 \item{cluster_x}{Arrange the x-axis variables using hierarchical clustering.
-(default: TRUE)}
+Default: TRUE}
 
 \item{cluster_y}{Arrange the y-axis variables using hierarchical clustering.
-(default: FALSE)}
+Default: FALSE}
 
 \item{colors_use}{Color palette to use to display expression levels.
-(default: "Reds")}
+Default: "Reds"}
 
 \item{translate_gene_names}{Should gene names be checked and translated to
-their correct HUGO Gene Nomenclature Committee name? (default: FALSE)}
+their correct HUGO Gene Nomenclature Committee name? Default: FALSE}
 
 \item{annotated_gene_list}{Is the gene list annotated?  If so, the genes will be
 faceted using their annontations.  Requires that 'genes_plot' is a two column
 with the annotations in a column named 'annotations' and genes in a column
-named 'genes'. (default: FALSE)}
+named 'genes'. Default: FALSE}
 
 \item{do_return}{Return a ggplot2 object instead of displaying}
 }
