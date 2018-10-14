@@ -231,11 +231,9 @@ bubbleplot <- function(seuratObj,
     scale_radius(range = c(0, 5))
 
   if (!is.null(colors_use)) {
-    g <- g + scale_color_gradientn(colors = make_color_scale(
-      palette = colors_use,
-      gradations = 100, 
-      limits = c(0,1)
-    ))
+    g <- g + scale_color_gradientn(colors = make_color_scale(palette = colors_use,
+                                                             gradations = 100),
+                                   limits = c(0,1))
   } else {
     g <- g + scale_color_continuous(low = "#EEEEEE", 
                                     high = "#FF0000", 
