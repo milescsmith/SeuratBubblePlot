@@ -2,20 +2,36 @@
 % Please edit documentation in R/bubbleplot.R
 \name{bubbleplot}
 \alias{bubbleplot}
+\alias{bubbleplot.seurat}
+\alias{bubbleplot.Seurat}
 \title{bubbleplot}
 \usage{
-bubbleplot(seuratObj, genes_plot, use_scaled = FALSE,
+bubbleplot(object, ...)
+
+\method{bubbleplot}{seurat}(object, genes_plot, use_scaled = FALSE,
   filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
   filter_exp_level = 0, group_by = "ident", x_lab_size = 9,
   y_lab_size = 9, x_axis_title = "Genes", y_axis_title = "Grouping",
   pct_legend_title = "Percent group expressing",
   scale_legend_title = "Average scaled expression",
-  x_lab_rot_angle = 45, order_genes = FALSE, cluster_x = TRUE,
-  cluster_y = FALSE, colors_use = NULL, translate_gene_names = FALSE,
-  annotated_gene_list = FALSE, do_return = FALSE)
+  x_lab_rot_angle = 45, preserve_gene_order = FALSE,
+  cluster_x = TRUE, cluster_y = FALSE, colors_use = NULL,
+  translate_gene_names = FALSE, annotated_gene_list = FALSE,
+  do_return = FALSE)
+
+\method{bubbleplot}{Seurat}(object, genes_plot, assay = "RNA",
+  slot = "data", filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
+  filter_exp_level = 0, group_by = "ident", x_lab_size = 9,
+  y_lab_size = 9, x_axis_title = "Genes", y_axis_title = "Grouping",
+  pct_legend_title = "Percent group expressing",
+  scale_legend_title = "Average scaled expression",
+  x_lab_rot_angle = 45, preserve_gene_order = FALSE,
+  cluster_x = TRUE, cluster_y = FALSE, colors_use = NULL,
+  translate_gene_names = FALSE, annotated_gene_list = FALSE,
+  do_return = FALSE)
 }
 \arguments{
-\item{seuratObj}{Seurat object}
+\item{object}{Seurat object}
 
 \item{genes_plot}{Either a list of genes or a data frame of annotated genes
 to display (see 'annotated_gene_list'). Note: Gene and protein names
@@ -40,6 +56,9 @@ or any column from the meta.data slot. Default: ident}
 
 \item{x_lab_rot_angle}{Angle to rotate the x-axis labels. Default: 45°}
 
+\item{preserve_gene_order}{Should the genes by displayed in order in which
+they are given? Default: FALSE.}
+
 \item{cluster_x}{Arrange the x-axis variables using hierarchical clustering.
 Default: TRUE}
 
@@ -59,8 +78,9 @@ named 'genes'. Default: FALSE}
 
 \item{do_return}{Return a ggplot2 object instead of displaying}
 
-\item{preserve_gene_order}{Should the genes by displayed in order in which
-they are given? Default: FALSE.}
+\item{assay}{Assay to plot. Default: "RNA"}
+
+\item{slot}{Slot to plot. Default: "data"}
 }
 \value{
 if isTRUE(do_return), a ggplot2 object
@@ -69,5 +89,5 @@ if isTRUE(do_return), a ggplot2 object
 Display percentage of cells expressing and levels for a set of genes.
 }
 \examples{
-BubblePlot(seuratObj = obj, genes_plot = c("IFIT1","IFITM1","IFITM3"), group_by = "treatment")
+BubblePlot(object = obj, genes_plot = c("IFIT1","IFITM1","IFITM3"), group_by = "treatment")
 }
