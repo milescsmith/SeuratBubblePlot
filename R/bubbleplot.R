@@ -81,13 +81,13 @@ bubbleplot.seurat <- function(object,
                        translate_gene_names = FALSE,
                        annotated_gene_list = FALSE,
                        do_return = FALSE) {
-  if (annotated_gene_list) {
+  if (isTRUE(annotated_gene_list)) {
     genes_list <- genes_plot
     genes_plot <- genes_list$genes
     genes_list %<>% filter(genes %in% rownames(object@data))
   }
 
-  if (translate_gene_names) {
+  if (isTRUE(translate_gene_names)) {
     object <- correctGeneNames(object)
     genes_plot <- checkGeneSymbols(
       x = genes_plot,
@@ -294,13 +294,13 @@ bubbleplot.Seurat <- function(object,
                               translate_gene_names = FALSE,
                               annotated_gene_list = FALSE,
                               do_return = FALSE) {
-  if (annotated_gene_list) {
+  if (isTRUE(annotated_gene_list)) {
     genes_list <- genes_plot
     genes_plot <- genes_list$genes
     genes_list %<>% filter(genes %in% rownames(object))
   }
 
-  if (translate_gene_names) {
+  if (isTRUE(translate_gene_names)) {
     object <- correctGeneNames(object)
     genes_plot <- checkGeneSymbols(
       x = genes_plot,
