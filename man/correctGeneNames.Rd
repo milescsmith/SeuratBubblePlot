@@ -2,12 +2,18 @@
 % Please edit documentation in R/correctgenenames.R
 \name{correctGeneNames}
 \alias{correctGeneNames}
-\title{correctGeneName}
+\alias{correctGeneNames.seurat}
+\alias{correctGeneNames.Seurat}
+\title{correctGeneNames}
 \usage{
-correctGeneNames(seuratObj)
+correctGeneNames(object, ...)
+
+\method{correctGeneNames}{seurat}(object)
+
+\method{correctGeneNames}{Seurat}(object, assay = "RNA")
 }
 \arguments{
-\item{seuratObj}{}
+\item{object}{}
 }
 \value{
 seurat object

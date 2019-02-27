@@ -2,11 +2,11 @@
 #'
 #' Produces a Bubble Plot for the genes of a given GO term.
 #'
-#' @param seuratObj Seurat object
+#' @param object Seurat object
 #' @param go_term Gene Ontology term identifier (i.e. GO:0046774)
 #' @param group_by Factor by which to group cells.  (default: ident)
 #' @param filter A list of gene names to filter the GO term members against.
-#'   (default: all genes in seuratObj)
+#'   (default: all genes in object)
 #' @param filter_exp_pct Display only genes that are expressed above this
 #'   fraction of cells in at least one group. (default: NULL)
 #' @param filter_exp_pct_thresh Threshold for expression fraction. (default: 0)
@@ -18,13 +18,12 @@
 #'
 #' @import dplyr
 #' @import org.Hs.eg.db
-#' @importFrom magrittr "%>%"
 #'
 #' @return if isTRUE(do_return), a ggplot2 object
 #' @export
 #'
-#' @examples GObubbleplot(seuratObj = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
-GObubbleplot <- function(seuratObj,
+#' @examples GObubbleplot(object = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
+GObubbleplot <- function(object,
                          go_term,
                          group_by = "ident",
                          filter = NULL,
@@ -41,7 +40,7 @@ GObubbleplot <- function(seuratObj,
                          ...){
 
   if (is.null(filter)) {
-    filter <- rownames(seuratObj@data)
+    filter <- rownames(object@data)
   }
 
   go_genes_to_plot <- unlist(BiocGenerics::mget(
@@ -51,7 +50,7 @@ GObubbleplot <- function(seuratObj,
   go_genes_to_plot <- go_genes_to_plot[which(go_genes_to_plot %in% filter)]
 
   if (length(go_genes_to_plot) > 0) {
-    gg <- bubbleplot(seuratObj,
+    gg <- bubbleplot(object,
                      genes_plot = unique(go_genes_to_plot),
                      group_by = group_by,
                      filter_exp_pct = filter_exp_pct,

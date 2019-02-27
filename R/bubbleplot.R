@@ -4,40 +4,39 @@
 #'
 #' @param object Seurat object
 #' @param genes_plot Either a list of genes or a data frame of annotated genes
-#'   to display (see 'annotated_gene_list'). Note: Gene and protein names
-#'   may be converted to the proper gene name automagically by
-#'   HGNChelper::checkGeneSymbols if 'translate_gene_names' is TRUE.
-#'   Genes not appearing in the dataset are skipped.
+#' to display (see 'annotated_gene_list'). Note: Gene and protein names
+#' may be converted to the proper gene name automagically by
+#' HGNChelper::checkGeneSymbols if 'translate_gene_names' is TRUE.
+#' Genes not appearing in the dataset are skipped.
 #' @param assay Assay to plot. Default: "RNA"
 #' @param slot Slot to plot. Default: "data"
 #' @param filter_exp_pct Display only genes that are expressed above this
-#'   fraction of cells in at least one group. Default: NULL
+#' fraction of cells in at least one group. Default: NULL
 #' @param filter_exp_pct_thresh Threshold for expression fraction. Default: 0
 #' @param filter_exp_level Display only genes that are expressed above this
-#'   level in at least one group. Default: 0
+#' level in at least one group. Default: 0
 #' @param group_by Variable by which to group cells.  Can be cluster identities
-#'   or any column from the meta.data slot. Default: ident
+#' or any column from the meta.data slot. Default: ident
 #' @param x_lab_size Font size for the x-axis labels. Default: 9
 #' @param y_lab_size Font size for the y-axis labels. Default: 9
 #' @param x_lab_rot_angle Angle to rotate the x-axis labels. Default: 45°
 #' @param preserve_gene_order Should the genes by displayed in order in which
-#'   they are given? Default: FALSE.
+#' they are given? Default: FALSE.
 #' @param cluster_x Arrange the x-axis variables using hierarchical clustering.
-#'   Default: TRUE
+#' Default: TRUE
 #' @param cluster_y Arrange the y-axis variables using hierarchical clustering.
-#'   Default: FALSE
+#' Default: FALSE
 #' @param colors_use Color palette to use to display expression levels.
-#'   Default: "Reds"
+#' Default: "Reds"
 #' @param translate_gene_names Should gene names be checked and translated to
-#'   their correct HUGO Gene Nomenclature Committee name? Default: FALSE
+#' their correct HUGO Gene Nomenclature Committee name? Default: FALSE
 #' @param annotated_gene_list Is the gene list annotated?  If so, the genes will be
-#'   faceted using their annontations.  Requires that 'genes_plot' is a two column
-#'   with the annotations in a column named 'annotations' and genes in a column
-#'   named 'genes'. Default: FALSE
+#' faceted using their annontations.  Requires that 'genes_plot' is a two column
+#' with the annotations in a column named 'annotations' and genes in a column
+#' named 'genes'. Default: FALSE
 #' @param do_return Return a ggplot2 object instead of displaying
 #'
 #' @import ggplot2
-#' @import magrittr
 #' @import Seurat
 #' @importFrom dplyr group_by summarise mutate ungroup select pull filter
 #' @importFrom tibble rownames_to_column as_tibble

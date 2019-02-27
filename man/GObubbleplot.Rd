@@ -4,21 +4,21 @@
 \alias{GObubbleplot}
 \title{GObubbleplot}
 \usage{
-GObubbleplot(seuratObj, go_term, group_by = "ident", filter = NULL,
+GObubbleplot(object, go_term, group_by = "ident", filter = NULL,
   filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
   filter_exp_level = 0, x_lab_size = 9, y_lab_size = 9,
   x_lab_rot_angle = 45, cluster_x = TRUE, cluster_y = TRUE,
   colors_use = NULL, do_return = FALSE, ...)
 }
 \arguments{
-\item{seuratObj}{Seurat object}
+\item{object}{Seurat object}
 
 \item{go_term}{Gene Ontology term identifier (i.e. GO:0046774)}
 
 \item{group_by}{Factor by which to group cells.  (default: ident)}
 
 \item{filter}{A list of gene names to filter the GO term members against.
-(default: all genes in seuratObj)}
+(default: all genes in object)}
 
 \item{filter_exp_pct}{Display only genes that are expressed above this
 fraction of cells in at least one group. (default: NULL)}
@@ -39,5 +39,5 @@ if isTRUE(do_return), a ggplot2 object
 Produces a Bubble Plot for the genes of a given GO term.
 }
 \examples{
-GObubbleplot(seuratObj = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
+GObubbleplot(object = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
 }
