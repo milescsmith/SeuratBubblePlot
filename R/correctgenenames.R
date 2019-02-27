@@ -23,8 +23,8 @@ correctGeneNames <- function(object, ...) {
 #' @return
 correctGeneNames.seurat <- function(object) {
   corrected_names <- checkGeneSymbols(rownames(object@raw.data),
-    unmapped.as.na = FALSE
-  )
+    unmapped.as.na = TRUE) %>%
+    filter(is.na(Suggested.Symbol))
 
   rownames(object@raw.data) <- mapvalues(
     x = rownames(object@raw.data),
@@ -55,8 +55,8 @@ correctGeneNames.seurat <- function(object) {
 correctGeneNames.Seurat <- function(object,
                                     assay = "RNA") {
   corrected_names <- checkGeneSymbols(rownames(object),
-    unmapped.as.na = FALSE
-  )
+    unmapped.as.na = TRUE) %>%
+    filter(is.na(Suggested.Symbol))
 
   corrected_names[["Suggested.Symbol"]] %<>% make.names(unique = TRUE)
   sn <- c(
