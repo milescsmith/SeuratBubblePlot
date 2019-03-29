@@ -40,7 +40,7 @@ GObubbleplot <- function(object,
                          ...){
 
   if (is.null(filter)) {
-    filter <- rownames(object@data)
+    filter <- rownames(object)
   }
 
   go_genes_to_plot <- unlist(BiocGenerics::mget(
