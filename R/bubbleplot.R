@@ -35,6 +35,8 @@
 #' with the annotations in a column named 'annotations' and genes in a column
 #' named 'genes'. Default: FALSE
 #' @param do_return Return a ggplot2 object instead of displaying
+#' @param verbose Show extra output information, like the genes that were not 
+#' found? Default: FALSE
 #'
 #' @import ggplot2
 #' @import Seurat
@@ -79,7 +81,8 @@ bubbleplot.seurat <- function(object,
                        colors_use = NULL,
                        translate_gene_names = FALSE,
                        annotated_gene_list = FALSE,
-                       do_return = FALSE) {
+                       do_return = FALSE,
+                       verbose = FALSE) {
   if (isTRUE(annotated_gene_list)) {
     genes_list <- genes_plot
     genes_plot <- genes_list$genes
@@ -102,7 +105,11 @@ bubbleplot.seurat <- function(object,
     filter(!value %in% rownames(object@data)) %>%
     pull(value) %>%
     unique()
-  print(glue("The following genes were not found: {genes_not_found}"))
+  
+  if (isisTRUE((verbose))){
+    message(glue("The following genes were not found: {genes_not_found}")) 
+  }
+  
   genes_plot <- genes_plot %>%
     as_tibble() %>%
     filter(value %in% rownames(object@data)) %>%

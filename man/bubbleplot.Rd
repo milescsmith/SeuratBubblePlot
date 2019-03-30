@@ -17,7 +17,7 @@ bubbleplot(object, ...)
   x_lab_rot_angle = 45, preserve_gene_order = FALSE,
   cluster_x = TRUE, cluster_y = FALSE, colors_use = NULL,
   translate_gene_names = FALSE, annotated_gene_list = FALSE,
-  do_return = FALSE)
+  do_return = FALSE, verbose = FALSE)
 
 \method{bubbleplot}{Seurat}(object, genes_plot, assay = "RNA",
   slot = "data", filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
@@ -77,6 +77,9 @@ with the annotations in a column named 'annotations' and genes in a column
 named 'genes'. Default: FALSE}
 
 \item{do_return}{Return a ggplot2 object instead of displaying}
+
+\item{verbose}{Show extra output information, like the genes that were not 
+found? Default: FALSE}
 
 \item{assay}{Assay to plot. Default: "RNA"}
 
