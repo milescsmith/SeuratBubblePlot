@@ -322,7 +322,11 @@ bubbleplot.Seurat <- function(object,
     filter(!value %in% rownames(object)) %>%
     pull(value) %>%
     unique()
-  print(glue("The following genes were not found: {genes_not_found}"))
+  
+  if (isisTRUE((verbose))){
+    message(glue("The following genes were not found: {genes_not_found}")) 
+  }
+  
   genes_plot <- genes_plot %>%
     as_tibble() %>%
     filter(value %in% rownames(object)) %>%
