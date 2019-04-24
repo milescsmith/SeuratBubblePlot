@@ -17,36 +17,6 @@ correctGeneNames <- function(object, ...) {
   UseMethod("correctGeneNames")
 }
 
-#' @rdname correctGeneNames
-#' @method correctGeneNames seurat
-#' @export
-#' @return
-correctGeneNames.seurat <- function(object) {
-  corrected_names <- checkGeneSymbols(rownames(object@raw.data),
-    unmapped.as.na = TRUE) %>%
-    filter(is.na(Suggested.Symbol))
-
-  rownames(object@raw.data) <- mapvalues(
-    x = rownames(object@raw.data),
-    from = corrected_names[["x"]],
-    to = corrected_names[["Suggested.Symbol"]]
-  )
-
-  rownames(object@data) <- mapvalues(
-    x = rownames(object@data),
-    from = corrected_names[["x"]],
-    to = corrected_names[["Suggested.Symbol"]]
-  )
-
-  rownames(object@scale.data) <- mapvalues(
-    x = rownames(object@scale.data),
-    from = corrected_names[["x"]],
-    to = corrected_names[["Suggested.Symbol"]]
-  )
-
-  return(object)
-}
-
 
 #' @rdname correctGeneNames
 #' @method correctGeneNames Seurat

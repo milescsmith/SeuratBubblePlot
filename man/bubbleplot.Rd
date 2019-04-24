@@ -2,52 +2,54 @@
 % Please edit documentation in R/bubbleplot.R
 \name{bubbleplot}
 \alias{bubbleplot}
-\alias{bubbleplot.seurat}
 \alias{bubbleplot.Seurat}
 \title{bubbleplot}
 \usage{
 bubbleplot(object, ...)
 
-\method{bubbleplot}{seurat}(object, genes_plot, use_scaled = FALSE,
-  filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
-  filter_exp_level = 0, group_by = "ident", x_lab_size = 9,
-  y_lab_size = 9, x_axis_title = "Genes", y_axis_title = "Grouping",
+\method{bubbleplot}{Seurat}(object, features_plot, assay = "RNA",
+  slot = "data", filter_exp_pct = NULL, filter_apply_method = "any",
+  filter_apply_group = NULL, filter_exp_pct_thresh = 0,
+  filter_exp_level = 0, grouping_var = "ident", x_lab_size = 9,
+  y_lab_size = 9, x_axis_title = "Features",
+  y_axis_title = "Grouping",
   pct_legend_title = "Percent group expressing",
   scale_legend_title = "Average scaled expression",
-  x_lab_rot_angle = 45, preserve_gene_order = FALSE,
+  x_lab_rot_angle = 45, preserve_feature_order = FALSE,
   cluster_x = TRUE, cluster_y = FALSE, colors_use = NULL,
-  translate_gene_names = FALSE, annotated_gene_list = FALSE,
+  translate_feature_names = FALSE, annotated_feature_list = FALSE,
   do_return = FALSE, verbose = FALSE)
-
-\method{bubbleplot}{Seurat}(object, genes_plot, assay = "RNA",
-  slot = "data", filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
-  filter_exp_level = 0, group_by = "ident", x_lab_size = 9,
-  y_lab_size = 9, x_axis_title = "Genes", y_axis_title = "Grouping",
-  pct_legend_title = "Percent group expressing",
-  scale_legend_title = "Average scaled expression",
-  x_lab_rot_angle = 45, preserve_gene_order = FALSE,
-  cluster_x = TRUE, cluster_y = FALSE, colors_use = NULL,
-  translate_gene_names = FALSE, annotated_gene_list = FALSE,
-  do_return = FALSE)
 }
 \arguments{
 \item{object}{Seurat object}
 
-\item{genes_plot}{Either a list of genes or a data frame of annotated genes
-to display (see 'annotated_gene_list'). Note: Gene and protein names
-may be converted to the proper gene name automagically by
-HGNChelper::checkGeneSymbols if 'translate_gene_names' is TRUE.
-Genes not appearing in the dataset are skipped.}
+\item{features_plot}{Either a list of features or a data frame of annotated features
+to display (see 'annotated_feature_list'). Note: Gene and protein names
+may be converted to the proper feature name automagically by
+HGNChelper::checkGeneSymbols if 'translate_feature_names' is TRUE.
+Features not appearing in the dataset are skipped.}
 
-\item{filter_exp_pct}{Display only genes that are expressed above this
-fraction of cells in at least one group. Default: NULL}
+\item{assay}{Assay to plot. Default: "RNA"}
+
+\item{slot}{Slot to plot. Default: "data"}
+
+\item{filter_exp_pct}{Display only features that are expressed above this
+fraction.  The method by which and groups in which this is judged are controlled by
+`filter_apply_method` and `filter_apply_group`, respectively.  Default: NULL}
+
+\item{filter_apply_method}{How should `filter_exp_pct` be applied - should `any` or `all` groups
+be above the desired expression level? Default: "any"}
+
+\item{filter_apply_group}{What identity groups should be considered when applying 
+`filter_exp_pct?  Only works with the active identity or whatever is specified in `grouping_var`. 
+Default: NULL}
 
 \item{filter_exp_pct_thresh}{Threshold for expression fraction. Default: 0}
 
-\item{filter_exp_level}{Display only genes that are expressed above this
+\item{filter_exp_level}{Display only features that are expressed above this
 level in at least one group. Default: 0}
 
-\item{group_by}{Variable by which to group cells.  Can be cluster identities
+\item{grouping_var}{Variable by which to group cells.  Can be cluster identities
 or any column from the meta.data slot. Default: ident}
 
 \item{x_lab_size}{Font size for the x-axis labels. Default: 9}
@@ -56,7 +58,7 @@ or any column from the meta.data slot. Default: ident}
 
 \item{x_lab_rot_angle}{Angle to rotate the x-axis labels. Default: 45°}
 
-\item{preserve_gene_order}{Should the genes by displayed in order in which
+\item{preserve_feature_order}{Should the features by displayed in order in which
 they are given? Default: FALSE.}
 
 \item{cluster_x}{Arrange the x-axis variables using hierarchical clustering.
@@ -68,29 +70,25 @@ Default: FALSE}
 \item{colors_use}{Color palette to use to display expression levels.
 Default: "Reds"}
 
-\item{translate_gene_names}{Should gene names be checked and translated to
+\item{translate_feature_names}{Should feature names be checked and translated to
 their correct HUGO Gene Nomenclature Committee name? Default: FALSE}
 
-\item{annotated_gene_list}{Is the gene list annotated?  If so, the genes will be
-faceted using their annontations.  Requires that 'genes_plot' is a two column
-with the annotations in a column named 'annotations' and genes in a column
-named 'genes'. Default: FALSE}
+\item{annotated_feature_list}{Is the feature list annotated?  If so, the features will be
+faceted using their annontations.  Requires that 'features_plot' is a two column
+with the annotations in a column named 'annotations' and features in a column
+named 'features'. Default: FALSE}
 
 \item{do_return}{Return a ggplot2 object instead of displaying}
 
-\item{verbose}{Show extra output information, like the genes that were not 
+\item{verbose}{Show extra output information, like the features that were not 
 found? Default: FALSE}
-
-\item{assay}{Assay to plot. Default: "RNA"}
-
-\item{slot}{Slot to plot. Default: "data"}
 }
 \value{
 if isTRUE(do_return), a ggplot2 object
 }
 \description{
-Display percentage of cells expressing and levels for a set of genes.
+Display percentage of cells expressing and levels for a set of features.
 }
 \examples{
-BubblePlot(object = obj, genes_plot = c("IFIT1","IFITM1","IFITM3"), group_by = "treatment")
+BubblePlot(object = obj, features_plot = c("IFIT1","IFITM1","IFITM3"), grouping_var = "treatment")
 }

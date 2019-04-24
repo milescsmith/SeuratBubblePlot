@@ -2,13 +2,10 @@
 % Please edit documentation in R/correctgenenames.R
 \name{correctGeneNames}
 \alias{correctGeneNames}
-\alias{correctGeneNames.seurat}
 \alias{correctGeneNames.Seurat}
 \title{correctGeneNames}
 \usage{
 correctGeneNames(object, ...)
-
-\method{correctGeneNames}{seurat}(object)
 
 \method{correctGeneNames}{Seurat}(object, assay = "RNA")
 }

@@ -3,14 +3,12 @@
 \name{DetectionRate}
 \alias{DetectionRate}
 \alias{DetectionRate.Seurat}
-\alias{DetectionRate.seurat}
 \title{DetectionRate}
 \usage{
 DetectionRate(object, ...)
 
-\method{DetectionRate}{Seurat}(object, assay = "RNA", thresh.min = 0)
-
-\method{DetectionRate}{seurat}(object, thresh.min = 0)
+\method{DetectionRate}{Seurat}(object, assay = "RNA", features = NULL,
+  slot_use = "data", thresh.min = 0, ...)
 }
 \arguments{
 \item{object}{Seurat object}
