@@ -12,7 +12,6 @@ Depends: R (>= 3.5.0),
   HGNChelper,
   magrittr,
   Seurat,
-  tidyr,
   tibble,
   compositions,
   ggplot2,
@@ -24,7 +23,8 @@ Depends: R (>= 3.5.0),
   purrr,
   stringr,
 Remotes:
-  github::satijalab/Seurat
+  github::satijalab/Seurat,
+  github::tidyverse/tidyr
 License: BSD
 Encoding: UTF-8
 LazyData: true
