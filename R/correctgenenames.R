@@ -6,7 +6,7 @@
 #'
 #' @import Seurat
 #' @importFrom HGNChelper checkGeneSymbols
-#' @importFrom plyr mapvalues
+#' @importFrom dplyr recode
 #' @importFrom methods slot
 #'
 #' @return seurat object
@@ -35,21 +35,17 @@ correctGeneNames.Seurat <- function(object,
     "scale.data",
     "meta.features"
   )
+  rename_list <- as.character(corrected_names[["Suggested.Symbol"]])
+  names(rename_list) <- corrected_names[["x"]]
   for (i in sn) {
     suppressMessages(
-      rownames(slot(object@assays[[assay]], i)) <- mapvalues(
-        x = rownames(slot(object@assays[[assay]], i)),
-        from = corrected_names[["x"]],
-        to = as.character(corrected_names[["Suggested.Symbol"]])
-      )
+      rownames(slot(object@assays[[assay]], i)) <- recode(.x = rownames(slot(object@assays[[assay]], i)),
+                                                          !!!rename_list)
     )
   }
   suppressMessages(
-    object@assays[[assay]]@var.features <- mapvalues(
-      x = object@assays[[assay]]@var.features,
-      from = corrected_names[["x"]],
-      to = as.character(corrected_names[["Suggested.Symbol"]])
-    )
+    object@assays[[assay]]@var.features <- recode(.x = object@assays[[assay]]@var.features,
+                                                  !!!rename_list)
   )
 
   return(object)

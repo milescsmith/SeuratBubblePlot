@@ -46,7 +46,7 @@
 #'
 #' @import ggplot2
 #' @import Seurat
-#' @importFrom dplyr group_by summarise mutate ungroup select pull filter
+#' @importFrom dplyr group_by summarise mutate ungroup select pull filter recode
 #' @importFrom tibble rownames_to_column as_tibble
 #' @importFrom tidyr gather pivot_longer
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
@@ -93,9 +93,9 @@ bubbleplot.Seurat <- function(object,
                               do_return = FALSE,
                               verbose = FALSE) {
   if (isTRUE(annotated_feature_list)) {
-    feature_list <- features_plot
-    features_plot <- feature_list$features
-    feature_list %<>% filter(features %in% rownames(object))
+    features_list <- features_plot
+    features_plot <- features_list$features
+    features_list %<>% filter(features %in% rownames(object))
   }
 
   if (isTRUE(translate_feature_names)) {
@@ -218,7 +218,7 @@ bubbleplot.Seurat <- function(object,
   data_to_plot %<>%
     ungroup() %>%
     group_by(features_plot) %>%
-    mutate(avg_exp_scale = compositions::normalize(x = avg_exp))
+    mutate(avg_exp_scale = normalize(x = avg_exp))
 
   data_to_plot %<>%
     group_by(features_plot) %>%
@@ -237,9 +237,10 @@ bubbleplot.Seurat <- function(object,
   }
 
   if (annotated_feature_list) {
-    data_to_plot$annotations <- plyr::mapvalues(x = data_to_plot$features_plot,
-                                                from = features_list$features,
-                                                to = as.character(features_list$annotations))
+    rename_list <- as.character(features_list$annotations)
+    names(rename_list) <- features_list$features
+    data_to_plot$annotations <- recode(.x = data_to_plot$features_plot,
+                                       !!!rename_list)
   }
 
   g <- data_to_plot %>%

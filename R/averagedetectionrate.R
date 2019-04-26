@@ -30,8 +30,8 @@ DetectionRate <- function(object, ...){
 DetectionRate.Seurat <- function(object,
                                  assay = "RNA",
                                  features = NULL,
-                                 slot_use = "data"
-                                 , thresh.min = 0,
+                                 slot_use = "data",
+                                 thresh.min = 0,
                                  ...) {
   DefaultAssay(object) <- assay
   ident_use <- Idents(object)
