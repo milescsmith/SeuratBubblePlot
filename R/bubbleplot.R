@@ -69,8 +69,8 @@ bubbleplot <- function(object, ...){
 #' @export
 bubbleplot.Seurat <- function(object,
                               features_plot,
-                              assay = "RNA",
-                              slot = 'data',
+                              assay = NULL,
+                              slot = "data",
                               filter_exp_pct = NULL,
                               filter_apply_method = "any",
                               filter_apply_group = NULL,
@@ -127,10 +127,13 @@ bubbleplot.Seurat <- function(object,
   if (grouping_var != "ident") {
     Idents(object) <- grouping_var
     ident <- as.factor(x = FetchData(object = object,
-                                     vars = grouping_var)[, 1])
+                                     vars = grouping_var,
+                                     slot = slot)[, 1])
   }
 
-  DefaultAssay(object) <- assay
+  if (!is.null(assay)){
+    features_plot <- glue("{tolower(assay)}_{features_plot}") %>% as.character()
+  }
   data_to_plot <- FetchData(object = object,
                             vars = features_plot) %>%
     as_tibble(rownames = "cell")
@@ -138,7 +141,11 @@ bubbleplot.Seurat <- function(object,
 
   data_to_plot %<>% pivot_longer(cols = -c(cell, ident),
                                  names_to = "features_plot",
-                                 values_to = "expression")
+                                 values_to = "expression") 
+  
+  if (!is.null(assay)){
+    data_to_plot$features_plot %<>% str_remove(pattern = glue("{tolower(assay)}_"))
+  }
 
   data_to_plot %<>%
     group_by(ident, features_plot) %>%
