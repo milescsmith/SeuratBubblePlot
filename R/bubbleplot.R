@@ -107,22 +107,6 @@ bubbleplot.Seurat <- function(object,
   }
   original_features_order <- features_plot
 
-  features_not_found <- features_plot %>%
-    as_tibble() %>%
-    filter(!value %in% rownames(object)) %>%
-    pull(value) %>%
-    unique()
-  
-  if (isTRUE((verbose))){
-    message(glue("The following features were not found: {features_not_found}")) 
-  }
-  
-  features_plot <- features_plot %>%
-    as_tibble() %>%
-    filter(value %in% rownames(object)) %>%
-    pull(value) %>%
-    unique()
-
   ident <- as.factor(x = Idents(object))
   if (grouping_var != "ident") {
     Idents(object) <- grouping_var
@@ -141,7 +125,14 @@ bubbleplot.Seurat <- function(object,
 
   data_to_plot %<>% pivot_longer(cols = -c(cell, ident),
                                  names_to = "features_plot",
-                                 values_to = "expression") 
+                                 values_to = "expression")
+  
+  features_not_found <- features_plot[features_plot %nin% data_to_plot[["features_plot"]]] %>% unique()
+  features_plot <- features_plot[features_plot %in% data_to_plot[["features_plot"]]] %>% unique()
+  
+  if (isTRUE((verbose))){
+    message(glue("The following features were not found: {features_not_found}")) 
+  }
   
   if (!is.null(assay)){
     data_to_plot$features_plot %<>% str_remove(pattern = glue("{tolower(assay)}_"))
@@ -154,17 +145,16 @@ bubbleplot.Seurat <- function(object,
                                      threshold = 0),
               n = n())
 
-  data_to_plot$features_plot <- sub(x = data_to_plot$features_plot,
-                                    pattern = "\\.",
-                                    replacement = "-")
-  avg_expr <- AverageExpression(object = object,
-                                assay = assay,
-                                features = features_plot,
-                                verbose = FALSE
-                                )[[assay]] %>%
-    as.matrix() %>%
-    scale()
-
+  avg_expr <- FetchData(object = set1, 
+                       vars = features_plot) %>% 
+    as_tibble(rownames = "cell") %>% 
+    group_by(ident = get(grouping_var)) %>% 
+    summarise_if(is.numeric, mean) %>% 
+    mutate_at(features_plot, normalize) %>%
+    as.data.frame() %>% 
+    column_to_rownames("ident") %>%
+    t()
+  
   if (!is.null(filter_exp_pct)) {
     avg_detect <- DetectionRate(object = object,
                                 assay = assay,
@@ -205,8 +195,7 @@ bubbleplot.Seurat <- function(object,
 
     data_to_plot$features_plot <- factor(data_to_plot$features_plot,
                                          levels = labels(feature_dendro),
-                                         ordered = TRUE
-    )
+                                         ordered = TRUE)
   }
 
   if (isTRUE(cluster_y)) {

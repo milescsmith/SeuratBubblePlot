@@ -7,7 +7,7 @@
 \usage{
 bubbleplot(object, ...)
 
-\method{bubbleplot}{Seurat}(object, features_plot, assay = "RNA",
+\method{bubbleplot}{Seurat}(object, features_plot, assay = NULL,
   slot = "data", filter_exp_pct = NULL, filter_apply_method = "any",
   filter_apply_group = NULL, filter_exp_pct_thresh = 0,
   filter_exp_level = 0, grouping_var = "ident", x_lab_size = 9,

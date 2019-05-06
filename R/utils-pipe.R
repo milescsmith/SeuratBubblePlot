@@ -21,3 +21,13 @@ NULL
 #' @importFrom magrittr %<>%
 #' @usage lhs \%<>\% rhs
 NULL
+
+#' Negative value matching 
+#'
+#' @name %nin%
+#' @rdname negative_match
+#' @keywords internal
+#' @export
+#' @importFrom purrr compose
+#' @usage lhs \%nin\% rhs
+`%nin%` <- compose(`!`, `%nin%`)
