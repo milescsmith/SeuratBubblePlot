@@ -1,4 +1,4 @@
-Package: seuratBubblePlot
+Package: SeuratBubblePlot
 Type: Package
 Title: Create bubble plot of scRNAseq expression data from Seurat
 Version: 0.4.0
