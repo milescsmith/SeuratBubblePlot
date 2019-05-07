@@ -145,7 +145,7 @@ bubbleplot.Seurat <- function(object,
                                      threshold = 0),
               n = n())
 
-  avg_expr <- FetchData(object = set1, 
+  avg_expr <- FetchData(object = object, 
                        vars = features_plot) %>% 
     as_tibble(rownames = "cell") %>% 
     group_by(ident = get(grouping_var)) %>% 
