@@ -133,10 +133,6 @@ bubbleplot.Seurat <- function(object,
   if (isTRUE((verbose))){
     message(glue("The following features were not found: {features_not_found}")) 
   }
-  
-  if (!is.null(assay)){
-    data_to_plot$features_plot %<>% str_remove(pattern = glue("{tolower(assay)}_"))
-  }
 
   data_to_plot %<>%
     group_by(ident, features_plot) %>%
@@ -231,14 +227,18 @@ bubbleplot.Seurat <- function(object,
                                       levels = unique(original_features_order),
                                       ordered = TRUE)
   }
-
+  
+  if (!is.null(assay)){
+    data_to_plot$features_plot %<>% str_remove(pattern = glue("{tolower(assay)}_"))
+  }
+  
   if (annotated_feature_list) {
     rename_list <- as.character(features_list$annotations)
     names(rename_list) <- features_list$features
     data_to_plot$annotations <- recode(.x = data_to_plot$features_plot,
                                        !!!rename_list)
   }
-
+  
   g <- data_to_plot %>%
     ggplot(aes(x = features_plot,
                y = ident,
