@@ -17,6 +17,3 @@ double
 \description{
 Return the percentage of a list that is above a threshold
 }
-\examples{
-PercentAbove(x = c(1,2,3), threshold = 2)
-}

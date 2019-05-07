@@ -43,11 +43,17 @@
 #' @param do_return Return a ggplot2 object instead of displaying
 #' @param verbose Show extra output information, like the features that were not 
 #' found? Default: FALSE
+#' @param x_axis_title x-axis title
+#' @param y_axis_title y-axis title
+#' @param pct_legend_title Percent expressed legend title
+#' @param scale_legend_title Scale legend title.
+#' @param ... ignored
 #'
 #' @import ggplot2
 #' @import Seurat
-#' @importFrom dplyr group_by summarise mutate ungroup select pull filter recode
-#' @importFrom tibble rownames_to_column as_tibble
+#' @importFrom dplyr group_by summarise mutate ungroup select pull filter recode 
+#' summarise_if mutate_at top_n
+#' @importFrom tibble rownames_to_column as_tibble column_to_rownames
 #' @importFrom tidyr gather pivot_longer
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
 #' @importFrom compositions normalize
@@ -58,7 +64,7 @@
 #' @return if isTRUE(do_return), a ggplot2 object
 #' @export
 #'
-#' @examples BubblePlot(object = obj, features_plot = c("IFIT1","IFITM1","IFITM3"), grouping_var = "treatment")
+#' @examples
 bubbleplot <- function(object, ...){
   UseMethod("bubbleplot")
 }
@@ -91,7 +97,8 @@ bubbleplot.Seurat <- function(object,
                               translate_feature_names = FALSE,
                               annotated_feature_list = FALSE,
                               do_return = FALSE,
-                              verbose = FALSE) {
+                              verbose = FALSE,
+                              ...) {
   if (isTRUE(annotated_feature_list)) {
     features_list <- features_plot
     features_plot <- features_list$features
@@ -142,7 +149,7 @@ bubbleplot.Seurat <- function(object,
               n = n())
 
   avg_expr <- FetchData(object = object, 
-                       vars = features_plot) %>% 
+                       vars = c(features_plot, grouping_var)) %>% 
     as_tibble(rownames = "cell") %>% 
     group_by(ident = get(grouping_var)) %>% 
     summarise_if(is.numeric, mean) %>% 

@@ -7,9 +7,12 @@
 #'
 #' @param object Seurat object
 #' @param thresh.min Minimum threshold to define 'detected' (log-scale)
+#' @param features Which features to calculate detection rate for. Default: NULL (= all)
+#' @param slot_use Slot to pull data from.  Default: "data"
+#' @param ... ignored
 #'
 #' @importFrom stringr str_remove
-#' @importFrom purrr map_dfr map_dbl
+#' @importFrom purrr map_dfr map
 #' @importFrom glue glue
 #'
 #' @return Returns a matrix with genes as rows, identity classes as columns.
@@ -17,7 +20,6 @@
 #' @export
 #'
 #' @examples
-#' head(DetectionRate(object = pbmc_small))
 DetectionRate <- function(object, ...){
   UseMethod("DetectionRate")
 }
@@ -28,12 +30,11 @@ DetectionRate <- function(object, ...){
 #' @export
 #' @return
 DetectionRate.Seurat <- function(object,
-                                 assay = "RNA",
                                  features = NULL,
                                  slot_use = "data",
                                  thresh.min = 0,
                                  ...) {
-  DefaultAssay(object) <- assay
+  assay <- DefaultAssay(object)
   ident_use <- Idents(object)
   data_all <- map_dfr(sort(x = unique(x = ident_use)), 
                       function(i) {

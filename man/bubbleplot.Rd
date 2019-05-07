@@ -18,10 +18,12 @@ bubbleplot(object, ...)
   x_lab_rot_angle = 45, preserve_feature_order = FALSE,
   cluster_x = TRUE, cluster_y = FALSE, colors_use = NULL,
   translate_feature_names = FALSE, annotated_feature_list = FALSE,
-  do_return = FALSE, verbose = FALSE)
+  do_return = FALSE, verbose = FALSE, ...)
 }
 \arguments{
 \item{object}{Seurat object}
+
+\item{...}{ignored}
 
 \item{features_plot}{Either a list of features or a data frame of annotated features
 to display (see 'annotated_feature_list'). Note: Gene and protein names
@@ -56,6 +58,14 @@ or any column from the meta.data slot. Default: ident}
 
 \item{y_lab_size}{Font size for the y-axis labels. Default: 9}
 
+\item{x_axis_title}{x-axis title}
+
+\item{y_axis_title}{y-axis title}
+
+\item{pct_legend_title}{Percent expressed legend title}
+
+\item{scale_legend_title}{Scale legend title.}
+
 \item{x_lab_rot_angle}{Angle to rotate the x-axis labels. Default: 45°}
 
 \item{preserve_feature_order}{Should the features by displayed in order in which
@@ -88,7 +98,4 @@ if isTRUE(do_return), a ggplot2 object
 }
 \description{
 Display percentage of cells expressing and levels for a set of features.
-}
-\examples{
-BubblePlot(object = obj, features_plot = c("IFIT1","IFITM1","IFITM3"), grouping_var = "treatment")
 }

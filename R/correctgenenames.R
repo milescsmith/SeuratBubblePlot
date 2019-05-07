@@ -2,12 +2,14 @@
 #'
 #' @description Convert the gene names in a Seurat object to the accepted HUGO gene names
 #'
-#' @param object
+#' @param object Seurat object
+#' @param assay assay to pull data from. If NULL, the default assay is used.  Default: NULL
+#' @param ... ignored
 #'
 #' @import Seurat
 #' @importFrom HGNChelper checkGeneSymbols
 #' @importFrom dplyr recode
-#' @importFrom methods slot
+#' @importFrom methods slot<- slot
 #'
 #' @return seurat object
 #' @export
@@ -23,7 +25,12 @@ correctGeneNames <- function(object, ...) {
 #' @export
 #' @return
 correctGeneNames.Seurat <- function(object,
-                                    assay = "RNA") {
+                                    assay = NULL,
+                                    ...) {
+  if (is.null(assay)){
+    assay <- DefaultAssay(object)  
+  }
+  
   corrected_names <- checkGeneSymbols(rownames(object),
     unmapped.as.na = TRUE) %>%
     filter(is.na(Suggested.Symbol))

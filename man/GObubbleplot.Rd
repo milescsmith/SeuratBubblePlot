@@ -28,6 +28,18 @@ fraction of cells in at least one group. (default: NULL)}
 \item{filter_exp_level}{Display only genes that are expressed above this
 level in at least one group. (default: 0)}
 
+\item{x_lab_size}{x-axis label font size. Default: 9}
+
+\item{y_lab_size}{y-axis label font size. Default: 9}
+
+\item{x_lab_rot_angle}{x-axis label rotation. Default: 45}
+
+\item{cluster_x}{Should x-axis variables be clustered? Default: TRUE}
+
+\item{cluster_y}{Should x-axis variables be clustered? Default: TRUE}
+
+\item{colors_use}{Colors to use for coloring gene expression}
+
 \item{do_return}{If TRUE, return a ggplot2 object instead of displaying chart}
 
 \item{...}{Additional options to pass to bubbleplot}
@@ -37,7 +49,4 @@ if isTRUE(do_return), a ggplot2 object
 }
 \description{
 Produces a Bubble Plot for the genes of a given GO term.
-}
-\examples{
-GObubbleplot(object = dataset, go_term = "GO:0002253", filter = dataset@var.genes)
 }

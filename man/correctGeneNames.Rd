@@ -7,10 +7,14 @@
 \usage{
 correctGeneNames(object, ...)
 
-\method{correctGeneNames}{Seurat}(object, assay = "RNA")
+\method{correctGeneNames}{Seurat}(object, assay = NULL, ...)
 }
 \arguments{
-\item{object}{}
+\item{object}{Seurat object}
+
+\item{...}{ignored}
+
+\item{assay}{assay to pull data from. If NULL, the default assay is used.  Default: NULL}
 }
 \value{
 seurat object

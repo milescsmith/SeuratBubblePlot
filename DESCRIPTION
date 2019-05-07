@@ -1,30 +1,44 @@
-Package: SeuratBubblePlot
 Type: Package
-Title: Create bubble plot of scRNAseq expression data from Seurat
-Version: 0.4.0
-Authors@R: person("Miles", "Smith", email = "miles-smith@omrf.org", role = c("aut", "cre"))
+Package: SeuratBubblePlot
+Title: Create bubble plot of scRNAseq expression data from
+    Seurat
+Version: 0.4.1
+Authors@R: 
+    person(given = "Miles",
+           family = "Smith",
+           role = c("aut", "cre"),
+           email = "miles-smith@omrf.org")
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: Creates a bubble plot displaying scRNAseq expression data where the size of bubbles indicates the percentage of a cell popluation expressing a gene and the color intensity indicates normalized expression levels.
-Depends: R (>= 3.5.0),
-  dplyr,
-  glue,
-  HGNChelper,
-  magrittr,
-  Seurat,
-  tibble,
-  compositions,
-  ggplot2,
-  grDevices,
-  viridis,
-  RColorBrewer,
-  org.Hs.eg.db,
-  gtools,
-  purrr,
-  stringr,
+Description: Creates a bubble plot displaying scRNAseq
+    expression data where the size of bubbles indicates the percentage of
+    a cell popluation expressing a gene and the color intensity indicates
+    normalized expression levels.
+License: BSD_3_clause + file LICENSE
+Depends: 
+    R (>= 3.5.0)
+Imports:
+    BiocGenerics,
+    compositions,
+    dplyr,
+    ggplot2,
+    glue,
+    grDevices,
+    gtools,
+    HGNChelper,
+    magrittr,
+    methods,
+    org.Hs.eg.db,
+    purrr,
+    RColorBrewer,
+    Seurat,
+    stats,
+    stringr,
+    tibble,
+    tidyr,
+    viridis
 Remotes:
-  github::satijalab/Seurat,
-  github::tidyverse/tidyr
-License: BSD
+    github::satijalab/Seurat,
+    github::tidyverse/tidyr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
