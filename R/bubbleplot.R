@@ -102,7 +102,11 @@ bubbleplot.Seurat <- function(object,
   if (isTRUE(annotated_feature_list)) {
     features_list <- features_plot
     features_plot <- features_list$features
-    features_list %<>% filter(features %in% rownames(object))
+    if (is.null(assay)) {
+      features_list %<>% filter(features %in% rownames(object))
+    }else{
+      features_list %<>% filter(features %in% rownames(object[[assay]]))
+    }
   }
 
   if (isTRUE(translate_feature_names)) {
