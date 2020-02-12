@@ -37,7 +37,6 @@ Imports:
     tidyr,
     viridis
 Remotes:
-    bioc::Seurat,
     bioc::BiocGenerics
 Encoding: UTF-8
 LazyData: true
