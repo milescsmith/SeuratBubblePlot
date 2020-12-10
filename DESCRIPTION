@@ -2,7 +2,7 @@ Type: Package
 Package: SeuratBubblePlot
 Title: Create bubble plot of scRNAseq expression data from
     Seurat
-Version: 0.4.1
+Version: 0.4.2
 Authors@R: 
     person(given = "Miles",
            family = "Smith",
