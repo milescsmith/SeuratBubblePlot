@@ -28,7 +28,7 @@
 #' @param y_lab_size Font size for the y-axis labels. Default: 9
 #' @param x_lab_rot_angle Angle to rotate the x-axis labels. Default: 45°
 #' @param preserve_feature_order Should the features by displayed in order in which
-#' they are given? Default: FALSE.
+#' they are given? Overrides cluster_x. Default: FALSE.
 #' @param cluster_x Arrange the x-axis variables using hierarchical clustering.
 #' Default: TRUE
 #' @param cluster_y Arrange the y-axis variables using hierarchical clustering.
@@ -53,7 +53,7 @@
 #' @import ggplot2
 #' @import Seurat
 #' @importFrom dplyr group_by summarise mutate ungroup select pull filter recode 
-#' summarise_if mutate_at top_n
+#' summarise_if mutate_at top_n n
 #' @importFrom tibble rownames_to_column as_tibble column_to_rownames
 #' @importFrom tidyr gather pivot_longer
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
@@ -234,14 +234,13 @@ bubbleplot.Seurat <- function(object,
   if (!isTRUE(cluster_x)) {
     data_to_plot <- data_to_plot[mixedorder(data_to_plot$features_plot), ]
   }
-  if (isTRUE(preserve_feature_order)){
-    data_to_plot$features_plot <- factor(data_to_plot$features_plot,
-                                      levels = unique(original_features_order),
-                                      ordered = TRUE)
-  }
   
   if (!is.null(assay)){
     data_to_plot$features_plot %<>% str_remove(pattern = glue("{tolower(assay)}_"))
+  }
+  if (isTRUE(preserve_feature_order)){
+    data_to_plot$features_plot <- factor(data_to_plot$features_plot,
+                                         levels = unique(original_features_order))
   }
   
   if (annotated_feature_list) {

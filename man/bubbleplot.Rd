@@ -88,7 +88,7 @@ or any column from the meta.data slot. Default: ident}
 \item{x_lab_rot_angle}{Angle to rotate the x-axis labels. Default: 45°}
 
 \item{preserve_feature_order}{Should the features by displayed in order in which
-they are given? Default: FALSE.}
+they are given? Overrides cluster_x. Default: FALSE.}
 
 \item{cluster_x}{Arrange the x-axis variables using hierarchical clustering.
 Default: TRUE}
