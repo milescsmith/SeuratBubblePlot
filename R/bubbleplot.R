@@ -148,8 +148,7 @@ bubbleplot.Seurat <- function(object,
   data_to_plot %<>%
     group_by(ident, features_plot) %>%
     summarise(avg_exp = mean(expm1(x = expression)),
-              pct_exp = PercentAbove(x = expression, 
-                                     threshold = 0),
+              pct_exp = PercentAbove(x = expression, threshold = filter_exp_pct_thresh),
               n = n())
 
   avg_expr <- FetchData(object = object, 
