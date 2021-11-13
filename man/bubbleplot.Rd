@@ -7,18 +7,35 @@
 \usage{
 bubbleplot(object, ...)
 
-\method{bubbleplot}{Seurat}(object, features_plot, assay = NULL,
-  slot = "data", filter_exp_pct = NULL, filter_apply_method = "any",
-  filter_apply_group = NULL, filter_exp_pct_thresh = 0,
-  filter_exp_level = 0, grouping_var = "ident", x_lab_size = 9,
-  y_lab_size = 9, x_axis_title = "Features",
+\method{bubbleplot}{Seurat}(
+  object,
+  features_plot,
+  assay = NULL,
+  slot = "data",
+  filter_exp_pct = NULL,
+  filter_apply_method = "any",
+  filter_apply_group = NULL,
+  filter_exp_pct_thresh = 0,
+  filter_exp_level = 0,
+  avg_func = "mean",
+  grouping_var = "ident",
+  x_lab_size = 9,
+  y_lab_size = 9,
+  x_axis_title = "Features",
   y_axis_title = "Grouping",
   pct_legend_title = "Percent group expressing",
   scale_legend_title = "Average scaled expression",
-  x_lab_rot_angle = 45, preserve_feature_order = FALSE,
-  cluster_x = TRUE, cluster_y = FALSE, colors_use = NULL,
-  translate_feature_names = FALSE, annotated_feature_list = FALSE,
-  do_return = FALSE, verbose = FALSE, ...)
+  x_lab_rot_angle = 45,
+  preserve_feature_order = FALSE,
+  cluster_x = TRUE,
+  cluster_y = FALSE,
+  colors_use = NULL,
+  translate_feature_names = FALSE,
+  annotated_feature_list = FALSE,
+  do_return = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{Seurat object}
@@ -50,6 +67,8 @@ Default: NULL}
 
 \item{filter_exp_level}{Display only features that are expressed above this
 level in at least one group. Default: 0}
+
+\item{avg_func}{Base function to call for measuring average expression. Default: "mean"}
 
 \item{grouping_var}{Variable by which to group cells.  Can be cluster identities
 or any column from the meta.data slot. Default: ident}
@@ -95,6 +114,8 @@ found? Default: FALSE}
 }
 \value{
 if isTRUE(do_return), a ggplot2 object
+
+
 }
 \description{
 Display percentage of cells expressing and levels for a set of features.

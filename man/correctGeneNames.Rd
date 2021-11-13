@@ -18,6 +18,8 @@ correctGeneNames(object, ...)
 }
 \value{
 seurat object
+
+
 }
 \description{
 Convert the gene names in a Seurat object to the accepted HUGO gene names
