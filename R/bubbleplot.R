@@ -23,6 +23,7 @@
 #' @param filter_exp_pct_thresh Threshold for expression fraction. Default: 0
 #' @param filter_exp_level Display only features that are expressed above this
 #' level in at least one group. Default: 0
+#' @param avg_func Base function to call for measuring average expression. Default: "mean"
 #' @param x_lab_size Font size for the x-axis labels. Default: 9
 #' @param y_lab_size Font size for the y-axis labels. Default: 9
 #' @param x_lab_rot_angle Angle to rotate the x-axis labels. Default: 45°
@@ -82,6 +83,7 @@ bubbleplot.Seurat <- function(object,
                               filter_apply_group = NULL,
                               filter_exp_pct_thresh = 0,
                               filter_exp_level = 0,
+                              avg_func = "mean",
                               grouping_var = "ident",
                               x_lab_size = 9,
                               y_lab_size = 9,
@@ -147,7 +149,7 @@ bubbleplot.Seurat <- function(object,
 
   data_to_plot %<>%
     group_by(ident, features_plot) %>%
-    summarise(avg_exp = mean(expm1(x = expression)),
+    summarise(avg_exp = do.call(what = avg_func, args = list(expm1(x = expression))),
               pct_exp = PercentAbove(x = expression, threshold = filter_exp_pct_thresh),
               n = n())
 
@@ -155,7 +157,7 @@ bubbleplot.Seurat <- function(object,
                        vars = c(features_plot, grouping_var)) %>% 
     as_tibble(rownames = "cell") %>% 
     group_by(ident = get(grouping_var)) %>% 
-    summarise_if(is.numeric, mean) %>% 
+    summarise_if(is.numeric, get(x = avg_func)) %>% 
     mutate_at(features_plot, normalize) %>%
     as.data.frame() %>% 
     column_to_rownames("ident") %>%
