@@ -9,5 +9,5 @@
 #'
 #' @examples
 PercentAbove <- function(x, threshold){
-  return(length(x = x[x > threshold]) / length(x = x))
+  return(100*length(x = x[x > threshold]) / length(x = x))
 }

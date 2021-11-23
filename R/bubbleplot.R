@@ -23,11 +23,12 @@
 #' @param filter_exp_pct_thresh Threshold for expression fraction. Default: 0
 #' @param filter_exp_level Display only features that are expressed above this
 #' level in at least one group. Default: 0
+#' @param avg_func Base function to call for measuring average expression. Default: "mean"
 #' @param x_lab_size Font size for the x-axis labels. Default: 9
 #' @param y_lab_size Font size for the y-axis labels. Default: 9
 #' @param x_lab_rot_angle Angle to rotate the x-axis labels. Default: 45°
 #' @param preserve_feature_order Should the features by displayed in order in which
-#' they are given? Default: FALSE.
+#' they are given? Overrides cluster_x. Default: FALSE.
 #' @param cluster_x Arrange the x-axis variables using hierarchical clustering.
 #' Default: TRUE
 #' @param cluster_y Arrange the y-axis variables using hierarchical clustering.
@@ -52,7 +53,7 @@
 #' @import ggplot2
 #' @import Seurat
 #' @importFrom dplyr group_by summarise mutate ungroup select pull filter recode 
-#' summarise_if mutate_at top_n
+#' summarise_if mutate_at top_n n
 #' @importFrom tibble rownames_to_column as_tibble column_to_rownames
 #' @importFrom tidyr gather pivot_longer
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
@@ -82,6 +83,7 @@ bubbleplot.Seurat <- function(object,
                               filter_apply_group = NULL,
                               filter_exp_pct_thresh = 0,
                               filter_exp_level = 0,
+                              avg_func = "mean",
                               grouping_var = "ident",
                               x_lab_size = 9,
                               y_lab_size = 9,
@@ -147,16 +149,15 @@ bubbleplot.Seurat <- function(object,
 
   data_to_plot %<>%
     group_by(ident, features_plot) %>%
-    summarise(avg_exp = mean(expm1(x = expression)),
-              pct_exp = PercentAbove(x = expression, 
-                                     threshold = 0),
+    summarise(avg_exp = do.call(what = avg_func, args = list(expm1(x = expression))),
+              pct_exp = PercentAbove(x = expression, threshold = filter_exp_pct_thresh),
               n = n())
 
   avg_expr <- FetchData(object = object, 
                        vars = c(features_plot, grouping_var)) %>% 
     as_tibble(rownames = "cell") %>% 
     group_by(ident = get(grouping_var)) %>% 
-    summarise_if(is.numeric, mean) %>% 
+    summarise_if(is.numeric, get(x = avg_func)) %>% 
     mutate_at(features_plot, normalize) %>%
     as.data.frame() %>% 
     column_to_rownames("ident") %>%
@@ -233,14 +234,13 @@ bubbleplot.Seurat <- function(object,
   if (!isTRUE(cluster_x)) {
     data_to_plot <- data_to_plot[mixedorder(data_to_plot$features_plot), ]
   }
-  if (isTRUE(preserve_feature_order)){
-    data_to_plot$features_plot <- factor(data_to_plot$features_plot,
-                                      levels = unique(original_features_order),
-                                      ordered = TRUE)
-  }
   
   if (!is.null(assay)){
     data_to_plot$features_plot %<>% str_remove(pattern = glue("{tolower(assay)}_"))
+  }
+  if (isTRUE(preserve_feature_order)){
+    data_to_plot$features_plot <- factor(data_to_plot$features_plot,
+                                         levels = unique(original_features_order))
   }
   
   if (annotated_feature_list) {

@@ -4,11 +4,23 @@
 \alias{GObubbleplot}
 \title{GObubbleplot}
 \usage{
-GObubbleplot(object, go_term, group_by = "ident", filter = NULL,
-  filter_exp_pct = NULL, filter_exp_pct_thresh = 0,
-  filter_exp_level = 0, x_lab_size = 9, y_lab_size = 9,
-  x_lab_rot_angle = 45, cluster_x = TRUE, cluster_y = TRUE,
-  colors_use = NULL, do_return = FALSE, ...)
+GObubbleplot(
+  object,
+  go_term,
+  group_by = "ident",
+  filter = NULL,
+  filter_exp_pct = NULL,
+  filter_exp_pct_thresh = 0,
+  filter_exp_level = 0,
+  x_lab_size = 9,
+  y_lab_size = 9,
+  x_lab_rot_angle = 45,
+  cluster_x = TRUE,
+  cluster_y = TRUE,
+  colors_use = NULL,
+  do_return = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{Seurat object}

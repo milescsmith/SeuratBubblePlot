@@ -7,8 +7,7 @@
 \usage{
 DetectionRate(object, ...)
 
-\method{DetectionRate}{Seurat}(object, features = NULL,
-  slot_use = "data", thresh.min = 0, ...)
+\method{DetectionRate}{Seurat}(object, features = NULL, slot_use = "data", thresh.min = 0, ...)
 }
 \arguments{
 \item{object}{Seurat object}
@@ -23,6 +22,8 @@ DetectionRate(object, ...)
 }
 \value{
 Returns a matrix with genes as rows, identity classes as columns.
+
+
 }
 \description{
 DetectionRate
