@@ -26,32 +26,48 @@ DetectionRate <- function(object, ...){
 
 #' @rdname DetectionRate
 #' @method DetectionRate Seurat
-#' @importFrom Seurat FetchData WhichCells Idents
+#' @importFrom SeuratObject FetchData WhichCells Idents
 #' @export
 #' @return
-DetectionRate.Seurat <- function(object,
-                                 features = NULL,
-                                 slot_use = "data",
-                                 thresh.min = 0,
-                                 ...) {
+DetectionRate.Seurat <-
+  function(
+    object,
+    features = NULL,
+    slot_use = "data",
+    thresh.min = 0,
+    ...) {
   assay <- DefaultAssay(object)
   ident_use <- Idents(object)
-  data_all <- map_dfr(sort(x = unique(x = ident_use)), 
-                      function(i) {
-                        temp_cells <- WhichCells(object = object, 
-                                                 ident = i)
-                        vars_use <- glue("{tolower(assay)}_{features}") %>% 
-                          as.character()
-                        data.temp <- map(FetchData(object, 
-                                                   vars = vars_use, 
-                                                   cells = temp_cells, 
-                                                   slot = slot_use), 
-                                         function(x){
-                                           sum(x > thresh.min)/length(x = x)
-                                           }) 
-                        }) %>% 
+  data_all <-
+    map_dfr(
+      sort(x = unique(x = ident_use)), 
+      function(i) {
+        temp_cells <-
+          WhichCells(
+            object = object, 
+            ident = i
+            )
+        vars_use <- glue("{tolower(assay)}_{features}") %>% 
+          as.character()
+        data.temp <- map(
+          FetchData(
+            object, 
+            vars = vars_use, 
+            cells = temp_cells, 
+            slot = slot_use
+            ), 
+          function(x){
+            sum(x > thresh.min)/length(x = x)
+            }
+          ) 
+        }
+      ) %>% 
     t()
   colnames(x = data_all) <- sort(x = unique(x = ident_use))
-  rownames(x = data_all) %<>% str_remove(glue("{tolower(assay)}_"))
-  return(data_all)
+  rownames(x = data_all) <-
+    str_remove(
+      string = rownames(x = data_all),
+      pattern = glue("{tolower(assay)}_")
+      )
+  data_all
 }

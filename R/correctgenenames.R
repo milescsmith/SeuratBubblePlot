@@ -24,36 +24,54 @@ correctGeneNames <- function(object, ...) {
 #' @method correctGeneNames Seurat
 #' @export
 #' @return
-correctGeneNames.Seurat <- function(object,
-                                    assay = NULL,
-                                    ...) {
-  if (is.null(assay)){
-    assay <- DefaultAssay(object)  
-  }
-  
-  corrected_names <- checkGeneSymbols(rownames(object),
-    unmapped.as.na = TRUE) %>%
-    filter(is.na(Suggested.Symbol))
+correctGeneNames.Seurat <-
+  function(object,
+           assay = NULL,
+           eliminate_unknown = FALSE,
+           ...) {
+    if (is.null(assay)) {
+      assay <- DefaultAssay(object)
+    }
 
-  corrected_names[["Suggested.Symbol"]] %<>% make.names(unique = TRUE)
-  sn <- c(
-    "counts",
-    "data",
-    "scale.data",
-    "meta.features"
-  )
-  rename_list <- as.character(corrected_names[["Suggested.Symbol"]])
-  names(rename_list) <- corrected_names[["x"]]
-  for (i in sn) {
-    suppressMessages(
-      rownames(slot(object@assays[[assay]], i)) <- recode(.x = rownames(slot(object@assays[[assay]], i)),
-                                                          !!!rename_list)
+    corrected_names <- suppressWarnings(HGNChelper::checkGeneSymbols(rownames(object),
+      unmapped.as.na = TRUE
+    )) |> 
+      filter(is.na(Suggested.Symbol))
+
+    corrected_names[["Suggested.Symbol"]] <- corrected_names[["Suggested.Symbol"]] |> make.names(unique = TRUE)
+    sn <- c(
+      "counts",
+      "data",
+      "scale.data",
+      "meta.features"
     )
-  }
-  suppressMessages(
-    object@assays[[assay]]@var.features <- recode(.x = object@assays[[assay]]@var.features,
-                                                  !!!rename_list)
-  )
+    rename_list <- as.character(corrected_names[["Suggested.Symbol"]])
+    names(rename_list) <- corrected_names[["x"]]
+    for (i in sn) {
+      suppressMessages(
+        rownames(slot(object@assays[[assay]], i)) <- recode(
+          .x = rownames(slot(object@assays[[assay]], i)),
+          !!!rename_list
+        )
+      )
+    }
+    suppressMessages(
+      object@assays[[assay]]@var.features <- recode(
+        .x = object@assays[[assay]]@var.features,
+        !!!rename_list
+      )
+    )
 
-  return(object)
-}
+    if (isTRUE(eliminate_unknown)) {
+      object <- object[
+        stringr::str_detect(
+          string = rownames(object),
+          pattern = "^NA.",
+          negate = TRUE
+        ),
+      ]
+    }
+
+
+    object
+  }

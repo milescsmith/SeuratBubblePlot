@@ -29,9 +29,12 @@ make_color_scale <- function(palette = "viridis", gradations = 10) {
       "cividis"
     )) {
       pal <- viridis(n = gradations, option = palette)
+    } else {
+      stop("That is not a valid palette")
     }
   } else {
     pal <- colorRampPalette(palette)(gradations)
   }
-  return(pal)
+  
+  pal
 }

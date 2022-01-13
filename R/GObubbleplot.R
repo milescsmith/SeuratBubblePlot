@@ -20,30 +20,30 @@
 #' @param colors_use Colors to use for coloring gene expression
 #' @param ... Additional options to pass to bubbleplot
 #'
-#' @param do_return If TRUE, return a ggplot2 object instead of displaying chart
-#'
 #' @import org.Hs.eg.db
 #' @importFrom BiocGenerics get mget
 #'
-#' @return if isTRUE(do_return), a ggplot2 object
+#' @return a ggplot2 object
 #' @export
 #'
 #' @examples
-GObubbleplot <- function(object,
-                         go_term,
-                         group_by = "ident",
-                         filter = NULL,
-                         filter_exp_pct = NULL,
-                         filter_exp_pct_thresh = 0,
-                         filter_exp_level = 0,
-                         x_lab_size = 9,
-                         y_lab_size = 9,
-                         x_lab_rot_angle = 45,
-                         cluster_x = TRUE,
-                         cluster_y = TRUE,
-                         colors_use = NULL,
-                         do_return = FALSE,
-                         ...){
+GObubbleplot <-
+  function(
+    object,
+    go_term,
+    group_by              = "ident",
+    filter                = NULL,
+    filter_exp_pct        = NULL,
+    filter_exp_pct_thresh = 0,
+    filter_exp_level      = 0,
+    x_lab_size            = 9,
+    y_lab_size            = 9,
+    x_lab_rot_angle       = 45,
+    cluster_x             = TRUE,
+    cluster_y             = TRUE,
+    colors_use            = NULL,
+    ...
+    ){
 
   if (is.null(filter)) {
     filter <- rownames(object)
@@ -55,28 +55,23 @@ GObubbleplot <- function(object,
   go_genes_to_plot <- go_genes_to_plot[which(go_genes_to_plot %in% filter)]
 
   if (length(go_genes_to_plot) > 0) {
-    gg <- bubbleplot(object,
-                     genes_plot = unique(go_genes_to_plot),
-                     group_by = group_by,
-                     filter_exp_pct = filter_exp_pct,
-                     filter_exp_pct_thresh = filter_exp_pct_thresh,
-                     filter_exp_level = filter_exp_level,
-                     x_lab_size = x_lab_size,
-                     y_lab_size = y_lab_size,
-                     x_lab_rot_angle = x_lab_rot_angle,
-                     cluster_x = cluster_x,
-                     cluster_y = cluster_y,
-                     colors_use = colors_use,
-                     do_return = do_return,
-                     ...)
+    gg <- bubbleplot(
+      object,
+      genes_plot            = unique(go_genes_to_plot),
+      group_by              = group_by,
+      filter_exp_pct        = filter_exp_pct,
+      filter_exp_pct_thresh = filter_exp_pct_thresh,
+      filter_exp_level      = filter_exp_level,
+      x_lab_size            = x_lab_size,
+      y_lab_size            = y_lab_size,
+      x_lab_rot_angle       = x_lab_rot_angle,
+      cluster_x             = cluster_x,
+      cluster_y             = cluster_y,
+      colors_use            = colors_use,
+      ...)
   } else {
     stop("No genes for that term are expressed in the dataset.")
   }
 
-  if (isTRUE(do_return)) {
-    return(gg)
-  } else {
-    gg
-  }
-
+  gg
 }
