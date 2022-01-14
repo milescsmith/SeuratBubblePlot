@@ -27,16 +27,18 @@ DetectionRate <- function(object, ...){
 #' @rdname DetectionRate
 #' @method DetectionRate Seurat
 #' @importFrom SeuratObject FetchData WhichCells Idents
+#' @importFrom rlang %||%
 #' @export
 #' @return
 DetectionRate.Seurat <-
   function(
     object,
     features = NULL,
+    assay = NULL,
     slot_use = "data",
     thresh.min = 0,
     ...) {
-  assay <- DefaultAssay(object)
+  assay <- assay %||% DefaultAssay(object)
   ident_use <- Idents(object)
   data_all <-
     map_dfr(
@@ -47,7 +49,7 @@ DetectionRate.Seurat <-
             object = object, 
             ident = i
             )
-        vars_use <- glue("{tolower(assay)}_{features}") %>% 
+        vars_use <- glue("{tolower(assay)}_{features}") |> 
           as.character()
         data.temp <- map(
           FetchData(
@@ -61,7 +63,7 @@ DetectionRate.Seurat <-
             }
           ) 
         }
-      ) %>% 
+      ) |> 
     t()
   colnames(x = data_all) <- sort(x = unique(x = ident_use))
   rownames(x = data_all) <-
