@@ -168,7 +168,7 @@ bubbleplot.Seurat <- function(
       ) |> 
     summarise(
       avg_exp = do.call(what = avg_func, args = list(expm1(x = expression))),
-      ct_exp = PercentAbove(x = expression, threshold = filter_exp_pct_thresh),
+      pct_exp = PercentAbove(x = expression, threshold = filter_exp_pct_thresh),
       n = n()
       )
 
