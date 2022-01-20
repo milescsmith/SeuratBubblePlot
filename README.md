@@ -11,18 +11,10 @@ The goal of SeuratBubblePlot is to …
 
 ## Installation
 
-You can install the released version of SeuratBubblePlot from
-[CRAN](https://CRAN.R-project.org) with:
+SeuratBubblePlot depends on several [Bioconductor](https://www.bioconductor.org/) packages, and thus must be installed by:
 
 ``` r
-install.packages("SeuratBubblePlot")
-```
-
-And the development version from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("milescsmith/SeuratBubblePlot")
+BiocManager::install("milescsmith/SeuratBubblePlot")
 ```
 
 ## Example
